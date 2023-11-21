@@ -5,6 +5,7 @@ environment:
   sdk: '>=3.1.5 <4.0.0'
 dependencies:
   flutter_screwdriver: ^3.1.0
+  custom_lint: ^0.5.7
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
