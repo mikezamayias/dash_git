@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'wrappers/dash_kit_wrapper.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const DashKit());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DashKit extends StatelessWidget {
+  const DashKit({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,28 +15,19 @@ class MyApp extends StatelessWidget {
       title: 'DashGit',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+        ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'DashGit'),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
       ),
-      body: const Center(
-        child: Text('Hello, world!'),
-      ),
+      home: const DashKitWrapper(),
     );
   }
 }
