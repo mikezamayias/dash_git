@@ -58,7 +58,14 @@ class RepositoriesView extends ConsumerWidget {
                     subtitle: repo.description != null
                         ? Text(repo.description!)
                         : null,
-                    trailing: Text(repo.stargazersCount.toString()),
+                    trailing: Text(
+                      repo.stargazersCount.toString(),
+                      style: platformThemeData(
+                        context,
+                        material: (data) => data.textTheme.bodyLarge,
+                        cupertino: (data) => data.textTheme.textStyle,
+                      ),
+                    ),
                   );
                 },
               ),

@@ -35,6 +35,13 @@ class DashGit extends ConsumerWidget {
         ),
       ),
       bottomNavBar: PlatformNavBar(
+        material3: (_, __) => MaterialNavigationBarData(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        ),
+        material: (_, __) => MaterialNavBarData(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+        ),
         currentIndex: ref.watch(RouteController.currentRouteIndexProvider),
         items: <BottomNavigationBarItem>[
           ...RouteController().routes.map<BottomNavigationBarItem>(
