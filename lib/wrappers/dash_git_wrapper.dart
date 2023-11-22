@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../controllers/token_controller.dart';
-import '../themes/text_theme/cupertino_text_theme.dart';
 import '../themes/text_theme/material_text_theme.dart';
 import '../views/dash_git.dart';
 import '../views/onboarding_view.dart';
@@ -56,7 +55,6 @@ class DashGitWrapper extends StatelessWidget {
     return CupertinoThemeData(
       brightness: brightness,
       primaryColor: Colors.purple,
-      textTheme: cupertinoTextThemeData,
     );
   }
 }

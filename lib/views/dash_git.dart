@@ -38,7 +38,6 @@ class DashGit extends ConsumerWidget {
             (RouteModel routeModel) {
               return BottomNavigationBarItem(
                 icon: routeModel.icon,
-                label: routeModel.label,
               );
             },
           ),

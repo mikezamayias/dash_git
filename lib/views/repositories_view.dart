@@ -57,19 +57,21 @@ class RepositoriesView extends ConsumerWidget {
               ),
             ],
           ),
-          body: ListView.builder(
-            itemCount: repositories.length,
-            itemBuilder: (context, index) {
-              return PlatformListTile(
-                title: PlatformText(repositories[index].name!),
-                subtitle: repositories[index].description != null
-                    ? PlatformText(repositories[index].description!)
-                    : null,
-                trailing: PlatformText(
-                  repositories[index].stargazersCount.toString(),
-                ),
-              );
-            },
+          body: SafeArea(
+            child: ListView.builder(
+              itemCount: repositories.length,
+              itemBuilder: (context, index) {
+                return PlatformListTile(
+                  title: PlatformText(repositories[index].name!),
+                  subtitle: repositories[index].description != null
+                      ? PlatformText(repositories[index].description!)
+                      : null,
+                  trailing: PlatformText(
+                    repositories[index].stargazersCount.toString(),
+                  ),
+                );
+              },
+            ),
           ),
         );
       },
