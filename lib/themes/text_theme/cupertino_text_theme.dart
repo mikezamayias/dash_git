@@ -1,33 +1,32 @@
 import 'package:flutter/cupertino.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-final cupertinoTextThemeData = CupertinoTextThemeData(
-  navLargeTitleTextStyle: GoogleFonts.ubuntuMono(
+const cupertinoTextThemeData = CupertinoTextThemeData(
+  navLargeTitleTextStyle: TextStyle(
     fontSize: 34,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
   ),
-  navTitleTextStyle: GoogleFonts.ubuntuMono(
+  navTitleTextStyle: TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.41,
   ),
-  navActionTextStyle: GoogleFonts.ubuntuMono(
+  navActionTextStyle: TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.41,
   ),
-  pickerTextStyle: GoogleFonts.ubuntuMono(
+  pickerTextStyle: TextStyle(
     fontSize: 21,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.41,
   ),
-  dateTimePickerTextStyle: GoogleFonts.ubuntuMono(
+  dateTimePickerTextStyle: TextStyle(
     fontSize: 21,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.41,
   ),
-  tabLabelTextStyle: GoogleFonts.ubuntuMono(
+  tabLabelTextStyle: TextStyle(
     fontSize: 10,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.28,

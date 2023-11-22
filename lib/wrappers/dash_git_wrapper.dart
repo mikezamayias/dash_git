@@ -24,14 +24,8 @@ class DashGitWrapper extends StatelessWidget {
         materialDarkTheme: _buildMaterialTheme(Brightness.dark),
         cupertinoLightTheme: _buildCupertinoTheme(Brightness.light),
         cupertinoDarkTheme: _buildCupertinoTheme(Brightness.dark),
-        matchCupertinoSystemChromeBrightness: true,
         builder: (context) => PlatformApp(
           debugShowCheckedModeBanner: false,
-          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-            DefaultMaterialLocalizations.delegate,
-            DefaultWidgetsLocalizations.delegate,
-            DefaultCupertinoLocalizations.delegate,
-          ],
           title: 'DashGit',
           home: FutureBuilder(
             future: TokenController().fetchTokens(),

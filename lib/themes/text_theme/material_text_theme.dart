@@ -1,66 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-final materialTextTheme = TextTheme(
-  displayLarge: GoogleFonts.ubuntuMono(
+const materialTextTheme = TextTheme(
+  displayLarge: TextStyle(
     fontSize: 96,
     fontWeight: FontWeight.w300,
     letterSpacing: -1.5,
   ),
-  displayMedium: GoogleFonts.ubuntuMono(
+  displayMedium: TextStyle(
     fontSize: 60,
     fontWeight: FontWeight.w300,
     letterSpacing: -0.5,
   ),
-  displaySmall: GoogleFonts.ubuntuMono(
+  displaySmall: TextStyle(
     fontSize: 48,
     fontWeight: FontWeight.w400,
   ),
-  headlineMedium: GoogleFonts.ubuntuMono(
+  headlineMedium: TextStyle(
     fontSize: 34,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
   ),
-  headlineSmall: GoogleFonts.ubuntuMono(
+  headlineSmall: TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w400,
   ),
-  titleLarge: GoogleFonts.ubuntuMono(
+  titleLarge: TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.15,
   ),
-  titleMedium: GoogleFonts.ubuntuMono(
+  titleMedium: TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
   ),
-  titleSmall: GoogleFonts.ubuntuMono(
+  titleSmall: TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
   ),
-  bodyLarge: GoogleFonts.ubuntuMono(
+  bodyLarge: TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.5,
   ),
-  bodyMedium: GoogleFonts.ubuntuMono(
+  bodyMedium: TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
   ),
-  labelLarge: GoogleFonts.ubuntuMono(
+  labelLarge: TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.25,
   ),
-  bodySmall: GoogleFonts.ubuntuMono(
+  bodySmall: TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
   ),
-  labelSmall: GoogleFonts.ubuntuMono(
+  labelSmall: TextStyle(
     fontSize: 10,
     fontWeight: FontWeight.w400,
     letterSpacing: 1.5,
