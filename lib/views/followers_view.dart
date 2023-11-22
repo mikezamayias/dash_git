@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../models/follower_model.dart';
 import '../providers/followers_provider.dart';
@@ -37,26 +38,24 @@ class FollowersView extends ConsumerWidget {
           body: SafeArea(
             child: followerModels.isEmpty
                 ? Center(child: PlatformCircularProgressIndicator())
-                : GridView.builder(
-                    padding: const EdgeInsets.all(8),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
+                : AlignedGridView.count(
                     itemCount: followerModels.length,
+                    padding: const EdgeInsets.all(16),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
                     itemBuilder: (context, index) {
-                      final follower = followerModels[index];
+                      final followerModel = followerModels.elementAt(index);
                       return Column(
                         children: [
                           CircleAvatar(
                             radius: 50,
                             foregroundColor: Colors.transparent,
-                            backgroundImage: NetworkImage(follower.avatarUrl!),
+                            backgroundImage:
+                                NetworkImage(followerModel.avatarUrl!),
                           ),
-                          const SizedBox(height: 4),
-                          Text('${follower.login}'),
+                          const SizedBox(height: 8),
+                          Text('@${followerModel.login}'),
                         ],
                       );
                     },

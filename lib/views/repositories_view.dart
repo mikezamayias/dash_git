@@ -49,6 +49,7 @@ class RepositoriesView extends ConsumerWidget {
         child: repositoryModels.isEmpty
             ? Center(child: PlatformCircularProgressIndicator())
             : ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 itemCount: repositoryModels.length,
                 itemBuilder: (context, index) {
                   final repo = repositoryModels.elementAt(index);
