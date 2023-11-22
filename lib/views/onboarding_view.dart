@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import '../widgets/blueprint_view.dart';
 
@@ -58,26 +55,23 @@ class OnboardingView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Flexible(
-              child: SupaSocialsAuth(
-                socialProviders: const [
-                  SocialProviders.github,
-                ],
-                redirectUrl: 'io.supabase.flutter://reset-callback/',
-                onSuccess: (Session response) {
-                  // do something, for example: navigate('home');
-                  log(
-                    response.toString(),
-                    name: 'SupaSocialsAuth:onSuccess',
-                  );
-                },
-                onError: (error) {
-                  // do something, for example: navigate("wait_for_email");
-                  log(
-                    error.toString(),
-                    name: 'SupaSocialsAuth:onError',
-                  );
-                },
+            PlatformTextButton(
+              onPressed: () async {
+                // context.navigator.pushReplacement(
+                //   platformPageRoute(
+                //     context: context,
+                //     builder: (context) => const DashGit(),
+                //   ),
+                // );
+              },
+              child: PlatformText(
+                'Get Started',
+                style: platformThemeData(
+                  context,
+                  material: (ThemeData data) => data.textTheme.labelLarge,
+                  cupertino: (CupertinoThemeData data) =>
+                      data.textTheme.actionTextStyle,
+                ),
               ),
             ),
           ],
