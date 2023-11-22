@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 
 import '../widgets/blueprint_view.dart';
-import 'dash_git.dart';
 
 class OnboardingView extends StatelessWidget {
   const OnboardingView({super.key});
@@ -59,12 +57,12 @@ class OnboardingView extends StatelessWidget {
             const SizedBox(height: 16),
             PlatformTextButton(
               onPressed: () {
-                context.navigator.pushReplacement(
-                  platformPageRoute(
-                    context: context,
-                    builder: (context) => const DashGit(),
-                  ),
-                );
+                // context.navigator.pushReplacement(
+                //   platformPageRoute(
+                //     context: context,
+                //     builder: (context) => const DashGit(),
+                //   ),
+                // );
               },
               child: PlatformText(
                 'Get Started',
