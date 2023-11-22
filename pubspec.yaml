@@ -12,12 +12,10 @@ dependencies:
   flutter_platform_widgets: ^6.0.2
   flutter_riverpod: ^2.4.8
   flutter_screwdriver: ^3.1.0
-  github_sign_in_plus: ^0.0.2
+  flutter_web_auth_2: ^3.0.4
   http: ^0.13.6
   json_annotation: ^4.8.1
   riverpod_lint: ^2.3.6
-  supabase_auth_ui: ^0.2.1
-  supabase_flutter: ^1.10.25
 dev_dependencies:
   build_runner: ^2.4.6
   envied_generator: ^0.5.2
