@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_profile_model.dart';
+part of 'user_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
-    UserProfileModel(
+UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       login: json['login'] as String?,
       id: json['id'] as int?,
       nodeId: json['node_id'] as String?,
@@ -46,8 +45,7 @@ UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$UserProfileModelToJson(UserProfileModel instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'login': instance.login,
       'id': instance.id,
       'node_id': instance.nodeId,

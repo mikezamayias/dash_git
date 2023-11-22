@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/user_profile_model.dart';
 import '../controllers/token_controller.dart';
+import '../models/user_model.dart';
 
-final userProfileProvider = FutureProvider<UserProfileModel>(
+final userProvider = FutureProvider<UserModel>(
   (ref) async {
     try {
       final tokenModel = TokenController().tokenModel!;
@@ -20,7 +20,7 @@ final userProfileProvider = FutureProvider<UserProfileModel>(
         },
       );
       if (response.statusCode == 200) {
-        return UserProfileModel.fromJson(jsonDecode(response.body));
+        return UserModel.fromJson(jsonDecode(response.body));
       } else if (response.statusCode == 304) {
         throw Exception('Data not modified since last request.');
       } else if (response.statusCode == 401) {

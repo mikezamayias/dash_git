@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user_profile_model.g.dart';
+part 'user_model.g.dart';
 
 @JsonSerializable()
-class UserProfileModel {
+class UserModel {
   String? login;
   int? id;
   @JsonKey(name: 'node_id')
@@ -56,7 +56,7 @@ class UserProfileModel {
   @JsonKey(name: 'updated_at')
   DateTime? updatedAt;
 
-  UserProfileModel({
+  UserModel({
     this.login,
     this.id,
     this.nodeId,
@@ -91,10 +91,10 @@ class UserProfileModel {
     this.updatedAt,
   });
 
-  // Factory constructor for creating a new `UserProfileModel` instance
-  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileModelFromJson(json);
+  // Factory constructor for creating a new `UserModel` instance
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-  // Method for converting a `UserProfileModel` instance to a map
-  Map<String, dynamic> toJson() => _$UserProfileModelToJson(this);
+  // Method for converting a `UserModel` instance to a map
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }
