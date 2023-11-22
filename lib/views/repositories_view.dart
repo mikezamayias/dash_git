@@ -37,7 +37,7 @@ class RepositoriesView extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<RepositoryModel>>(
-        future: RepositoryController().fetchRepositories('mikezamayias'),
+        future: RepositoryController().fetchRepositories(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

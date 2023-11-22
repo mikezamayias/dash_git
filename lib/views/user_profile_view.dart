@@ -10,7 +10,7 @@ class UserProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserProfileModel>(
-      future: UserProfileController().fetchUserProfile('mikezamayias'),
+      future: UserProfileController().fetchUserProfile(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Padding(

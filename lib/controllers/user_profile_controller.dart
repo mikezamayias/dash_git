@@ -17,7 +17,7 @@ class UserProfileController {
 
   // methods
   // get user profile data by calling https://api.github.com/users/mikezamayias
-  Future<UserProfileModel> fetchUserProfile(String username) async {
+  Future<UserProfileModel> fetchUserProfile() async {
     try {
       final response = await http.get(
         Uri.https('api.github.com', '/user'),
@@ -38,7 +38,7 @@ class UserProfileController {
         403 => // Forbidden
           throw Exception(
               'Access forbidden. You might not have the necessary permissions.'),
-        404 => throw Exception('User @$username not found.'),
+        404 => throw Exception('User not found.'),
         _ => throw Exception(
             'Failed with status code: ${response.statusCode}. Response body: ${response.body}',
           )
