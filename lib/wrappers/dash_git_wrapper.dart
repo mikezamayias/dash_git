@@ -2,73 +2,53 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../views/onboarding_view.dart';
+
 class DashGitWrapper extends StatelessWidget {
   const DashGitWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              PlatformText(
-                'DashGit',
-                style: platformThemeData(
-                  context,
-                  material: (ThemeData data) => data.textTheme.displayLarge,
-                  cupertino: (CupertinoThemeData data) =>
-                      data.textTheme.navLargeTitleTextStyle,
-                ),
-              ),
-              const Spacer(),
-              PlatformText(
-                'A GitHub dashboard app built with Flutter.',
-                style: platformThemeData(
-                  context,
-                  material: (ThemeData data) => data.textTheme.headlineSmall,
-                  cupertino: (CupertinoThemeData data) =>
-                      data.textTheme.navTitleTextStyle,
-                ),
-              ),
-              const SizedBox(height: 16),
-              PlatformText(
-                'See your profile, repositories, and more!',
-                style: platformThemeData(
-                  context,
-                  material: (ThemeData data) => data.textTheme.headlineSmall,
-                  cupertino: (CupertinoThemeData data) =>
-                      data.textTheme.navTitleTextStyle,
-                ),
-              ),
-              const SizedBox(height: 16),
-              PlatformText(
-                'Built with Flutter, GitHub API, and GitHub Actions.',
-                style: platformThemeData(
-                  context,
-                  material: (ThemeData data) => data.textTheme.headlineSmall,
-                  cupertino: (CupertinoThemeData data) =>
-                      data.textTheme.navTitleTextStyle,
-                ),
-              ),
-              const SizedBox(height: 16),
-              PlatformTextButton(
-                onPressed: () {},
-                child: PlatformText(
-                  'Get Started',
-                  style: platformThemeData(
-                    context,
-                    material: (ThemeData data) => data.textTheme.labelLarge,
-                    cupertino: (CupertinoThemeData data) =>
-                        data.textTheme.actionTextStyle,
-                  ),
-                ),
-              ),
-            ],
+    return PlatformProvider(
+      settings: PlatformSettingsData(
+        iosUsesMaterialWidgets: true,
+        iosUseZeroPaddingForAppbarPlatformIcon: true,
+      ),
+      builder: (BuildContext context) => PlatformTheme(
+        themeMode: ThemeMode.system,
+        materialLightTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.purple,
           ),
+          useMaterial3: true,
+        ),
+        materialDarkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.purple,
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
+        ),
+        cupertinoLightTheme: const CupertinoThemeData(
+          brightness: Brightness.light,
+          primaryColor: Colors.purple,
+          applyThemeToAll: true,
+        ),
+        cupertinoDarkTheme: const CupertinoThemeData(
+          brightness: Brightness.dark,
+          primaryColor: Colors.purple,
+          applyThemeToAll: true,
+        ),
+        matchCupertinoSystemChromeBrightness: true,
+        builder: (context) => const PlatformApp(
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          title: 'DashGit',
+          home: OnboardingView(),
         ),
       ),
     );
