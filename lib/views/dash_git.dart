@@ -24,14 +24,14 @@ class DashGit extends ConsumerWidget {
       ),
       body: SafeArea(
         child: PreloadPageView.builder(
-          itemBuilder: (context, index) => views.elementAt(ref
-              .watch(RouteController.currentRouteIndexProvider.notifier)
-              .state),
+          itemBuilder: (context, index) => views
+              .elementAt(ref.watch(RouteController.currentRouteIndexProvider)),
           itemCount: views.length,
           preloadPagesCount: views.length,
         ),
       ),
       bottomNavBar: PlatformNavBar(
+        currentIndex: ref.watch(RouteController.currentRouteIndexProvider),
         items: <BottomNavigationBarItem>[
           ...RouteController().routes.map<BottomNavigationBarItem>(
             (RouteModel routeModel) {

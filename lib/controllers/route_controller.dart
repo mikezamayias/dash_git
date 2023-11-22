@@ -53,9 +53,9 @@ class RouteController {
     followersRoute,
     searchRoute,
   ];
-  static StateProvider currentRouteIndexProvider =
-      StateProvider<int>((ref) => 0);
-  static StateProvider currentRouteProvider = StateProvider<RouteModel>((ref) {
+  static StateProvider<int> currentRouteIndexProvider =
+      StateProvider((ref) => 0);
+  static StateProvider<RouteModel> currentRouteProvider = StateProvider((ref) {
     final index = ref.watch(currentRouteIndexProvider);
     log(
       _instance.routes[index].label,

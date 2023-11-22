@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -46,10 +44,6 @@ class TokenController {
     String? accessToken = await _storage.read(key: 'access_token');
     String? tokenType = await _storage.read(key: 'token_type');
     String? scope = await _storage.read(key: 'scope');
-
-    log('$accessToken', name: 'accessToken');
-    log('$tokenType', name: 'tokenType');
-    log('$scope', name: 'scope');
 
     try {
       return TokenModel(
