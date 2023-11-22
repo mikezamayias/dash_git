@@ -15,11 +15,11 @@ class FollowersView extends ConsumerWidget {
       data: (List<FollowerModel> followerModels) {
         return PlatformScaffold(
           appBar: PlatformAppBar(
-            title: PlatformText('Followers'),
+            title: const Text('Followers'),
             trailingActions: [
               Icon(PlatformIcons(context).person),
               Center(
-                child: PlatformText(
+                child: Text(
                   '${followerModels.length}',
                   style: platformThemeData(
                     context,
@@ -43,7 +43,7 @@ class FollowersView extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final follower = followerModels.elementAt(index);
                       return PlatformListTile(
-                        title: PlatformText('${follower.login}'),
+                        title: Text('${follower.login}'),
                         leading: CircleAvatar(
                           radius: 25,
                           foregroundColor: Colors.transparent,
@@ -56,7 +56,7 @@ class FollowersView extends ConsumerWidget {
         );
       },
       loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (err, stack) => Center(child: PlatformText('Error: $err')),
+      error: (err, stack) => Center(child: Text('Error: $err')),
     );
   }
 }

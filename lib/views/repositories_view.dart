@@ -14,7 +14,7 @@ class RepositoriesView extends ConsumerWidget {
 
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: PlatformText('Repositories'),
+        title: const Text('Repositories'),
         trailingActions: [
           AnimatedOpacity(
             opacity: repositoryModels.isEmpty ? 0 : 1,
@@ -53,11 +53,11 @@ class RepositoriesView extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final repo = repositoryModels.elementAt(index);
                   return PlatformListTile(
-                    title: PlatformText(repo.name ?? ''),
+                    title: Text(repo.name ?? ''),
                     subtitle: repo.description != null
-                        ? PlatformText(repo.description!)
+                        ? Text(repo.description!)
                         : null,
-                    trailing: PlatformText(repo.stargazersCount.toString()),
+                    trailing: Text(repo.stargazersCount.toString()),
                   );
                 },
               ),

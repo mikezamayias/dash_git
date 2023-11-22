@@ -20,7 +20,7 @@ class OnboardingView extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            PlatformText(
+            Text(
               'DashGit',
               style: platformThemeData(
                 context,
@@ -30,7 +30,7 @@ class OnboardingView extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            PlatformText(
+            Text(
               'A GitHub dashboard app built with Flutter.',
               style: platformThemeData(
                 context,
@@ -40,7 +40,7 @@ class OnboardingView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            PlatformText(
+            Text(
               'See your profile, repositories, and more!',
               style: platformThemeData(
                 context,
@@ -50,7 +50,7 @@ class OnboardingView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            PlatformText(
+            Text(
               'Built with Flutter, GitHub API, and GitHub Actions.',
               style: platformThemeData(
                 context,
@@ -77,7 +77,7 @@ class OnboardingView extends StatelessWidget {
                       ),
                     );
               },
-              child: PlatformText(
+              child: Text(
                 'Get Started',
                 style: platformThemeData(
                   context,

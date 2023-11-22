@@ -15,7 +15,7 @@ class UserProfileView extends ConsumerWidget {
       data: (UserProfileModel userProfile) {
         return PlatformScaffold(
           appBar: PlatformAppBar(
-            title: PlatformText('User Profile'),
+            title: const Text('User Profile'),
           ),
           body: SafeArea(
             child: Padding(
@@ -28,12 +28,12 @@ class UserProfileView extends ConsumerWidget {
                     backgroundImage: NetworkImage(userProfile.avatarUrl!),
                   ),
                   const SizedBox(height: 16),
-                  PlatformText(userProfile.name!),
-                  PlatformText('@${userProfile.login!}'),
+                  Text(userProfile.name!),
+                  Text('@${userProfile.login!}'),
                   const SizedBox(height: 16),
-                  PlatformText(userProfile.location!),
+                  Text(userProfile.location!),
                   const SizedBox(height: 16),
-                  PlatformText(userProfile.bio!),
+                  Text(userProfile.bio!),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -41,14 +41,14 @@ class UserProfileView extends ConsumerWidget {
                       // location
                       Column(
                         children: [
-                          PlatformText('Followers'),
-                          PlatformText(userProfile.followers.toString()),
+                          const Text('Followers'),
+                          Text(userProfile.followers.toString()),
                         ],
                       ),
                       Column(
                         children: [
-                          PlatformText('Public Repos'),
-                          PlatformText(userProfile.publicRepos.toString()),
+                          const Text('Public Repos'),
+                          Text(userProfile.publicRepos.toString()),
                         ],
                       ),
                     ],
@@ -60,7 +60,7 @@ class UserProfileView extends ConsumerWidget {
         );
       },
       loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (err, stack) => Center(child: PlatformText('Error: $err')),
+      error: (err, stack) => Center(child: Text('Error: $err')),
     );
   }
 }
