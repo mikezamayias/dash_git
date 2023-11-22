@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../models/user_profile_model.dart';
+import 'token_controller.dart';
 
 class UserProfileController {
   //   singleton constructor
@@ -19,10 +20,12 @@ class UserProfileController {
   Future<UserProfileModel> fetchUserProfile(String username) async {
     try {
       final response = await http.get(
-        Uri.https('api.github.com', '/users/$username'),
+        Uri.https('api.github.com', '/user'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
+          'Authorization':
+              'Bearer ${TokenController().tokenModel!.accessToken}',
         },
       );
       return switch (response.statusCode) {
