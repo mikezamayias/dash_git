@@ -1,33 +1,60 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import 'wrappers/dash_kit_wrapper.dart';
+import 'wrappers/dash_git_wrapper.dart';
 
 void main() {
-  runApp(const DashKit());
+  runApp(const DashGit());
 }
 
-class DashKit extends StatelessWidget {
-  const DashKit({super.key});
+class DashGit extends StatelessWidget {
+  const DashGit({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DashGit',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-        ),
-        useMaterial3: true,
+    return PlatformProvider(
+      settings: PlatformSettingsData(
+        iosUsesMaterialWidgets: true,
+        iosUseZeroPaddingForAppbarPlatformIcon: true,
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+      builder: (BuildContext context) => PlatformTheme(
+        themeMode: ThemeMode.system,
+        materialLightTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.purple,
+          ),
+          useMaterial3: true,
+        ),
+        materialDarkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.purple,
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
+        ),
+        cupertinoLightTheme: const CupertinoThemeData(
+          brightness: Brightness.light,
+          primaryColor: Colors.purple,
+          applyThemeToAll: true,
+        ),
+        cupertinoDarkTheme: const CupertinoThemeData(
           brightness: Brightness.dark,
+          primaryColor: Colors.purple,
+          applyThemeToAll: true,
         ),
-        useMaterial3: true,
+        matchCupertinoSystemChromeBrightness: true,
+        builder: (context) => const PlatformApp(
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          title: 'DashGit',
+          home: DashGitWrapper(),
+        ),
       ),
-      home: const DashKitWrapper(),
     );
   }
 }
