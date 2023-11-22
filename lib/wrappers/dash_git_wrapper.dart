@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../controllers/token_controller.dart';
+import '../views/dash_git.dart';
 import '../views/onboarding_view.dart';
 
 class DashGitWrapper extends StatelessWidget {
@@ -40,15 +42,22 @@ class DashGitWrapper extends StatelessWidget {
           applyThemeToAll: true,
         ),
         matchCupertinoSystemChromeBrightness: true,
-        builder: (context) => const PlatformApp(
+        builder: (context) => PlatformApp(
           debugShowCheckedModeBanner: false,
-          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             DefaultMaterialLocalizations.delegate,
             DefaultWidgetsLocalizations.delegate,
             DefaultCupertinoLocalizations.delegate,
           ],
           title: 'DashGit',
-          home: OnboardingView(),
+          home: FutureBuilder(
+            future: TokenController().fetchTokens(),
+            builder: (context, snapshot) {
+              return TokenController().tokenModel != null
+                  ? const DashGit()
+                  : const OnboardingView();
+            },
+          ),
           // home: DashGit(),
         ),
       ),
