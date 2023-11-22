@@ -25,24 +25,23 @@ class UserProfileController {
           'Accept': 'application/vnd.github.v3+json',
         },
       );
-      // Check for successful response
-      if (response.statusCode == 200) {
-        return UserProfileModel.fromJson(jsonDecode(response.body));
-      } else {
-        // Handle non-successful response
-        throw Exception(
-          'Request to GitHub API failed with status code: ${response.statusCode}. Response body: ${response.body}',
-        );
-      }
+      return switch (response.statusCode) {
+        200 => // OK
+          UserProfileModel.fromJson(jsonDecode(response.body)),
+        304 => // Not modified
+          throw Exception('Data not modified since last request.'),
+        401 => // Requires authentication
+          throw Exception('Authentication required. Please login.'),
+        403 => // Forbidden
+          throw Exception(
+              'Access forbidden. You might not have the necessary permissions.'),
+        404 => throw Exception('User @$username not found.'),
+        _ => throw Exception(
+            'Failed with status code: ${response.statusCode}. Response body: ${response.body}',
+          )
+      };
     } on SocketException {
       throw Exception('No Internet connection.');
-    } on HttpException {
-      throw Exception('Could not find the user. Check the username.');
-    } on FormatException {
-      throw Exception('Bad response format.');
-    } catch (e) {
-      // Handle any other type of error
-      throw Exception('Failed to load user profile data. Error: $e');
     }
   }
 }
