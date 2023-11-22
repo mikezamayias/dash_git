@@ -3,21 +3,20 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../controllers/user_profile_controller.dart';
 import '../models/user_profile_model.dart';
-import '../widgets/blueprint_view.dart';
 
 class UserProfileView extends StatelessWidget {
   const UserProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlueprintView(
-      child: FutureBuilder<UserProfileModel>(
-        future: UserProfileController().fetchUserProfile('mikezamayias'),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
+    return FutureBuilder<UserProfileModel>(
+      future: UserProfileController().fetchUserProfile('mikezamayias'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                const SizedBox(height: 16),
                 CircleAvatar(
                   radius: 50,
                   foregroundColor: Colors.transparent,
@@ -51,13 +50,13 @@ class UserProfileView extends StatelessWidget {
                   ],
                 ),
               ],
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: PlatformText('${snapshot.error}'));
-          }
-          return Center(child: PlatformCircularProgressIndicator());
-        },
-      ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(child: PlatformText('${snapshot.error}'));
+        }
+        return Center(child: PlatformCircularProgressIndicator());
+      },
     );
   }
 }

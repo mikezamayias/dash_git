@@ -11,14 +11,14 @@ import '../views/search_user_view.dart';
 import '../views/user_profile_view.dart';
 
 class RouteController {
-  //   singleton constructor
+  // singleton constructor
   static final RouteController _instance = RouteController._internal();
 
   factory RouteController() => _instance;
 
   RouteController._internal();
 
-  //  routes for user profile, repositories, followers, and search
+  // attributes
   static final userProfileRoute = RouteModel(
     label: 'User Profile',
     icon: Builder(

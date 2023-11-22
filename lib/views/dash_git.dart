@@ -15,7 +15,9 @@ class DashGit extends ConsumerWidget {
         title:
             PlatformText(ref.watch(RouteController.currentRouteProvider).label),
       ),
-      body: ref.watch(RouteController.currentRouteProvider).view,
+      body: SafeArea(
+        child: ref.watch(RouteController.currentRouteProvider).view,
+      ),
       bottomNavBar: PlatformNavBar(
         items: <BottomNavigationBarItem>[
           ...RouteController().routes.map<BottomNavigationBarItem>(
@@ -25,7 +27,7 @@ class DashGit extends ConsumerWidget {
                 label: routeModel.label,
               );
             },
-          )
+          ),
         ],
         itemChanged: (int index) {
           ref.read(RouteController.currentRouteIndexProvider.notifier).state =
