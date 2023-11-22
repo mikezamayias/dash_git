@@ -4,6 +4,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/token_controller.dart';
+import '../themes/text_theme/cupertino_text_theme.dart';
+import '../themes/text_theme/material_text_theme.dart';
 import '../views/dash_git.dart';
 import '../views/onboarding_view.dart';
 
@@ -20,10 +22,10 @@ class DashGitWrapper extends StatelessWidget {
       ),
       builder: (BuildContext context) => PlatformTheme(
         themeMode: ThemeMode.system,
-        materialLightTheme: _buildMaterialTheme(Brightness.light, fontFamily),
-        materialDarkTheme: _buildMaterialTheme(Brightness.dark, fontFamily),
-        cupertinoLightTheme: _buildCupertinoTheme(Brightness.light, fontFamily),
-        cupertinoDarkTheme: _buildCupertinoTheme(Brightness.dark, fontFamily),
+        materialLightTheme: _buildMaterialTheme(Brightness.light),
+        materialDarkTheme: _buildMaterialTheme(Brightness.dark),
+        cupertinoLightTheme: _buildCupertinoTheme(Brightness.light),
+        cupertinoDarkTheme: _buildCupertinoTheme(Brightness.dark),
         matchCupertinoSystemChromeBrightness: true,
         builder: (context) => PlatformApp(
           debugShowCheckedModeBanner: false,
@@ -47,37 +49,22 @@ class DashGitWrapper extends StatelessWidget {
     );
   }
 
-  ThemeData _buildMaterialTheme(
-    Brightness brightness,
-    String fontFamily,
-  ) {
+  ThemeData _buildMaterialTheme(Brightness brightness) {
     return ThemeData(
-      fontFamily: fontFamily,
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.purple,
         brightness: brightness,
       ),
+      textTheme: materialTextTheme,
       useMaterial3: true,
     );
   }
 
-  CupertinoThemeData _buildCupertinoTheme(
-    Brightness brightness,
-    String fontFamily,
-  ) {
+  CupertinoThemeData _buildCupertinoTheme(Brightness brightness) {
     return CupertinoThemeData(
       brightness: brightness,
       primaryColor: Colors.purple,
-      textTheme: CupertinoTextThemeData(
-        textStyle: TextStyle(fontFamily: fontFamily),
-        actionTextStyle: TextStyle(fontFamily: fontFamily),
-        tabLabelTextStyle: TextStyle(fontFamily: fontFamily),
-        navTitleTextStyle: TextStyle(fontFamily: fontFamily),
-        navLargeTitleTextStyle: TextStyle(fontFamily: fontFamily),
-        navActionTextStyle: TextStyle(fontFamily: fontFamily),
-        pickerTextStyle: TextStyle(fontFamily: fontFamily),
-        dateTimePickerTextStyle: TextStyle(fontFamily: fontFamily),
-      ),
+      textTheme: cupertinoTextThemeData,
     );
   }
 }
