@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../views/onboarding_view.dart';
+import '../views/dash_git.dart';
 
 class DashGitWrapper extends StatelessWidget {
   const DashGitWrapper({super.key});
@@ -48,7 +48,8 @@ class DashGitWrapper extends StatelessWidget {
             DefaultCupertinoLocalizations.delegate,
           ],
           title: 'DashGit',
-          home: OnboardingView(),
+          // home: OnboardingView(),
+          home: DashGit(),
         ),
       ),
     );
