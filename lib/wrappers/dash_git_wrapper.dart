@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/token_controller.dart';
 import '../views/dash_git.dart';
@@ -11,6 +12,7 @@ class DashGitWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fontFamily = GoogleFonts.ubuntu().fontFamily;
     return PlatformProvider(
       settings: PlatformSettingsData(
         iosUsesMaterialWidgets: true,
@@ -19,12 +21,14 @@ class DashGitWrapper extends StatelessWidget {
       builder: (BuildContext context) => PlatformTheme(
         themeMode: ThemeMode.system,
         materialLightTheme: ThemeData(
+          fontFamily: fontFamily,
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.purple,
           ),
           useMaterial3: true,
         ),
         materialDarkTheme: ThemeData(
+          fontFamily: fontFamily,
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.purple,
             brightness: Brightness.dark,

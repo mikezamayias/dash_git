@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controllers/user_profile_controller.dart';
+import '../providers/user_profile_provider.dart';
 import '../models/user_profile_model.dart';
 
-class UserProfileView extends StatelessWidget {
+class UserProfileView extends ConsumerWidget {
   const UserProfileView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<UserProfileModel>(
-      future: UserProfileController().fetchUserProfile(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProfileAsyncValue = ref.watch(userProfileProvider);
+    return userProfileAsyncValue.when(
+      data: (UserProfileModel userProfile) {
+        return PlatformScaffold(
+          appBar: PlatformAppBar(
+            title: PlatformText('User Profile'),
+          ),
+          body: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 CircleAvatar(
                   radius: 50,
                   foregroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(snapshot.data!.avatarUrl!),
+                  backgroundImage: NetworkImage(userProfile.avatarUrl!),
                 ),
                 const SizedBox(height: 16),
-                PlatformText(snapshot.data!.name!),
+                PlatformText(userProfile.name!),
+                PlatformText('@${userProfile.login!}'),
                 const SizedBox(height: 16),
-                PlatformText('@${snapshot.data!.login!}'),
+                PlatformText(userProfile.location!),
                 const SizedBox(height: 16),
-                PlatformText(snapshot.data!.location!),
-                const SizedBox(height: 16),
-                PlatformText(snapshot.data!.bio!),
+                PlatformText(userProfile.bio!),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -38,25 +41,24 @@ class UserProfileView extends StatelessWidget {
                     Column(
                       children: [
                         PlatformText('Followers'),
-                        PlatformText(snapshot.data!.followers.toString()),
+                        PlatformText(userProfile.followers.toString()),
                       ],
                     ),
                     Column(
                       children: [
                         PlatformText('Public Repos'),
-                        PlatformText(snapshot.data!.publicRepos.toString()),
+                        PlatformText(userProfile.publicRepos.toString()),
                       ],
                     ),
                   ],
                 ),
               ],
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(child: PlatformText('${snapshot.error}'));
-        }
-        return Center(child: PlatformCircularProgressIndicator());
+          ),
+        );
       },
+      loading: () => Center(child: PlatformCircularProgressIndicator()),
+      error: (err, stack) => Center(child: PlatformText('Error: $err')),
     );
   }
 }
