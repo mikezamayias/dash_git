@@ -61,4 +61,3 @@ class FollowerModel {
       _$FollowerModelFromJson(json);
   Map<String, dynamic> toJson() => _$FollowerModelToJson(this);
 }
-
