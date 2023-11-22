@@ -14,7 +14,8 @@ dependencies:
   flutter_screwdriver: ^3.1.0
   flutter_secure_storage: ^9.0.0
   flutter_web_auth_2: ^3.0.4
-  http: ^0.13.6
+  google_fonts: ^6.1.0
+  http: ^1.1.0
   json_annotation: ^4.8.1
   preload_page_view: ^0.2.0
   riverpod_lint: ^2.3.6
