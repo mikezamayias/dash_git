@@ -1,4 +1,4 @@
-package com.example.dash_git
+package com.mikezamayias.dash_git
 
 import io.flutter.embedding.android.FlutterActivity
 
