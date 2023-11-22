@@ -23,12 +23,29 @@ class RepositoriesView extends ConsumerWidget {
                 options: <PopupMenuOption>[
                   PopupMenuOption(
                     label: 'Stars',
+                    onTap: (PopupMenuOption option) {
+                      repositories.sort(
+                        (a, b) => (b.stargazersCount ?? 0)
+                            .compareTo(a.stargazersCount ?? 0),
+                      );
+                    },
                   ),
                   PopupMenuOption(
                     label: 'Names',
+                    onTap: (PopupMenuOption option) {
+                      repositories.sort(
+                        (a, b) => (a.name ?? '').compareTo(b.name ?? ''),
+                      );
+                    },
                   ),
                   PopupMenuOption(
                     label: 'Description',
+                    onTap: (PopupMenuOption option) {
+                      repositories.sort(
+                        (a, b) => (a.description ?? '')
+                            .compareTo(b.description ?? ''),
+                      );
+                    },
                   ),
                 ],
                 icon: Icon(
