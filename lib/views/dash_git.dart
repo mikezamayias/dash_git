@@ -18,14 +18,14 @@ class DashGit extends ConsumerWidget {
       body: ref.watch(RouteController.currentRouteProvider).view,
       bottomNavBar: PlatformNavBar(
         items: <BottomNavigationBarItem>[
-          ...RouteController()
-              .routes
-              .map<BottomNavigationBarItem>((RouteModel routeModel) {
-            return BottomNavigationBarItem(
-              icon: routeModel.icon,
-              label: routeModel.label,
-            );
-          })
+          ...RouteController().routes.map<BottomNavigationBarItem>(
+            (RouteModel routeModel) {
+              return BottomNavigationBarItem(
+                icon: routeModel.icon,
+                label: routeModel.label,
+              );
+            },
+          )
         ],
         itemChanged: (int index) {
           ref.read(RouteController.currentRouteIndexProvider.notifier).state =
