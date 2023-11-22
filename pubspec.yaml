@@ -12,6 +12,7 @@ dependencies:
   flutter_platform_widgets: ^6.0.2
   flutter_riverpod: ^2.4.8
   flutter_screwdriver: ^3.1.0
+  flutter_secure_storage: ^9.0.0
   flutter_web_auth_2: ^3.0.4
   http: ^0.13.6
   json_annotation: ^4.8.1

@@ -45,9 +45,11 @@
 			<dict>
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>com.mikezamayias.dashgit</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>com.mikezamayias.dash_git</string>
+					<string>dashgit</string>
 				</array>
 			</dict>
 		</array>
