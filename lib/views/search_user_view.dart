@@ -7,6 +7,7 @@ class SearchUserView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textEditingController = TextEditingController();
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: const Text('Search User'),
@@ -14,50 +15,40 @@ class SearchUserView extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Row(
+          child: Column(
             children: <Widget>[
-              Expanded(
-                child: PlatformWidget(
-                  cupertino: (context, _) => CupertinoSearchTextField(
-                    placeholder: 'Search User',
-                    onSubmitted: (String value) {
-                      showPlatformDialog(
-                        context: context,
-                        builder: (_) => PlatformAlertDialog(
-                          title: const Text('Search User'),
-                          content: Text('You have searched for $value'),
-                          actions: <Widget>[
-                            PlatformDialogAction(
-                              child: PlatformText('OK'),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  material: (context, _) => TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Search User',
-                      suffixIcon: Icon(Icons.search),
-                    ),
-                    onSubmitted: (String value) {
-                      showPlatformDialog(
-                        context: context,
-                        builder: (_) => PlatformAlertDialog(
-                          title: const Text('Search User'),
-                          content: Text('You have searched for $value'),
-                          actions: <Widget>[
-                            PlatformDialogAction(
-                              child: PlatformText('OK'),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+              PlatformWidget(
+                cupertino: (context, _) => CupertinoSearchTextField(
+                  controller: textEditingController,
+                  placeholder: 'Search User',
+                ),
+                material: (context, _) => TextField(
+                  controller: textEditingController,
+                  decoration: const InputDecoration(
+                    hintText: 'Search User',
+                    suffixIcon: Icon(Icons.search),
                   ),
                 ),
+              ),
+              const SizedBox(height: 16),
+              PlatformElevatedButton(
+                child: PlatformText('Search'),
+                onPressed: () {
+                  showPlatformDialog(
+                    context: context,
+                    builder: (_) => PlatformAlertDialog(
+                      title: const Text('Search User'),
+                      content: Text(
+                          'You have searched for ${textEditingController.text}'),
+                      actions: <Widget>[
+                        PlatformDialogAction(
+                          child: PlatformText('OK'),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),
