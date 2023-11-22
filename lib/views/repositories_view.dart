@@ -15,33 +15,35 @@ class RepositoriesView extends ConsumerWidget {
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: PlatformText('Repositories'),
-        trailingActions: repositoryModels.isEmpty
-            ? null
-            : [
-                PlatformPopupMenu(
-                  options: <PopupMenuOption>[
-                    PopupMenuOption(
-                      label: 'Stars',
-                      onTap: (_) => ref
-                          .read(sortedRepositoriesProvider.notifier)
-                          .sortByStars(),
-                    ),
-                    PopupMenuOption(
-                      label: 'Name',
-                      onTap: (_) => ref
-                          .read(sortedRepositoriesProvider.notifier)
-                          .sortByName(),
-                    ),
-                    // Add other sorting options here
-                  ],
-                  icon: Icon(
-                    context.platformIcon(
-                      material: Icons.more_vert_rounded,
-                      cupertino: CupertinoIcons.ellipsis,
-                    ),
-                  ),
+        trailingActions: [
+          AnimatedOpacity(
+            opacity: repositoryModels.isEmpty ? 0 : 1,
+            duration: const Duration(milliseconds: 300),
+            child: PlatformPopupMenu(
+              options: <PopupMenuOption>[
+                PopupMenuOption(
+                  label: 'Stars',
+                  onTap: (_) => ref
+                      .read(sortedRepositoriesProvider.notifier)
+                      .sortByStars(),
                 ),
+                PopupMenuOption(
+                  label: 'Name',
+                  onTap: (_) => ref
+                      .read(sortedRepositoriesProvider.notifier)
+                      .sortByName(),
+                ),
+                // Add other sorting options here
               ],
+              icon: Icon(
+                context.platformIcon(
+                  material: Icons.more_vert_rounded,
+                  cupertino: CupertinoIcons.ellipsis,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: repositoryModels.isEmpty
