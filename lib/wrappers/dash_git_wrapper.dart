@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/token_controller.dart';
 import '../themes/text_theme/cupertino_text_theme.dart';
@@ -14,7 +13,6 @@ class DashGitWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fontFamily = GoogleFonts.ubuntu().fontFamily!;
     return PlatformProvider(
       settings: PlatformSettingsData(
         iosUsesMaterialWidgets: true,
