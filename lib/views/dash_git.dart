@@ -24,6 +24,7 @@ class DashGit extends ConsumerWidget {
       ),
       body: SafeArea(
         child: PreloadPageView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => views
               .elementAt(ref.watch(RouteController.currentRouteIndexProvider)),
           itemCount: views.length,
