@@ -7,6 +7,26 @@ import 'package:http/http.dart' as http;
 import '../controllers/token_controller.dart';
 import '../models/repository_model.dart';
 
+final sortedRepositoriesProvider =
+    StateNotifierProvider<SortedRepositoriesNotifier, List<RepositoryModel>>(
+        (ref) {
+  final repositories = ref.watch(repositoriesProvider).value ?? [];
+  return SortedRepositoriesNotifier(repositories);
+});
+
+class SortedRepositoriesNotifier extends StateNotifier<List<RepositoryModel>> {
+  SortedRepositoriesNotifier(super.initialRepositories);
+
+  void sortByStars() {
+    state = [...state]..sort(
+        (a, b) => (b.stargazersCount ?? 0).compareTo(a.stargazersCount ?? 0));
+  }
+
+  void sortByName() {
+    state = [...state]..sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+  }
+}
+
 final repositoriesProvider = FutureProvider<List<RepositoryModel>>(
   (ref) async {
     try {

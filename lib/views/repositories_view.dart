@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/repository_model.dart';
 import '../providers/repositories_provider.dart';
 
 class RepositoriesView extends ConsumerWidget {
@@ -11,72 +10,56 @@ class RepositoriesView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repositoriesAsyncValue = ref.watch(repositoriesProvider);
-    return repositoriesAsyncValue.when(
-      data: (List<RepositoryModel> repositories) {
-        return PlatformScaffold(
-          appBar: PlatformAppBar(
-            title: PlatformText('Repositories'),
-            trailingActions: [
-              // sort button
-              PlatformPopupMenu(
-                options: <PopupMenuOption>[
-                  PopupMenuOption(
-                    label: 'Stars',
-                    onTap: (PopupMenuOption option) {
-                      repositories.sort(
-                        (a, b) => (b.stargazersCount ?? 0)
-                            .compareTo(a.stargazersCount ?? 0),
-                      );
-                    },
-                  ),
-                  PopupMenuOption(
-                    label: 'Names',
-                    onTap: (PopupMenuOption option) {
-                      repositories.sort(
-                        (a, b) => (a.name ?? '').compareTo(b.name ?? ''),
-                      );
-                    },
-                  ),
-                  PopupMenuOption(
-                    label: 'Description',
-                    onTap: (PopupMenuOption option) {
-                      repositories.sort(
-                        (a, b) => (a.description ?? '')
-                            .compareTo(b.description ?? ''),
-                      );
-                    },
-                  ),
-                ],
-                icon: Icon(
-                  context.platformIcon(
-                    material: Icons.more_vert_rounded,
-                    cupertino: CupertinoIcons.ellipsis,
+    final repositoryModels = ref.watch(sortedRepositoriesProvider);
+
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: PlatformText('Repositories'),
+        trailingActions: repositoryModels.isEmpty
+            ? null
+            : [
+                PlatformPopupMenu(
+                  options: <PopupMenuOption>[
+                    PopupMenuOption(
+                      label: 'Stars',
+                      onTap: (_) => ref
+                          .read(sortedRepositoriesProvider.notifier)
+                          .sortByStars(),
+                    ),
+                    PopupMenuOption(
+                      label: 'Name',
+                      onTap: (_) => ref
+                          .read(sortedRepositoriesProvider.notifier)
+                          .sortByName(),
+                    ),
+                    // Add other sorting options here
+                  ],
+                  icon: Icon(
+                    context.platformIcon(
+                      material: Icons.more_vert_rounded,
+                      cupertino: CupertinoIcons.ellipsis,
+                    ),
                   ),
                 ),
+              ],
+      ),
+      body: SafeArea(
+        child: repositoryModels.isEmpty
+            ? Center(child: PlatformCircularProgressIndicator())
+            : ListView.builder(
+                itemCount: repositoryModels.length,
+                itemBuilder: (context, index) {
+                  final repo = repositoryModels.elementAt(index);
+                  return PlatformListTile(
+                    title: PlatformText(repo.name ?? ''),
+                    subtitle: repo.description != null
+                        ? PlatformText(repo.description!)
+                        : null,
+                    trailing: PlatformText(repo.stargazersCount.toString()),
+                  );
+                },
               ),
-            ],
-          ),
-          body: SafeArea(
-            child: ListView.builder(
-              itemCount: repositories.length,
-              itemBuilder: (context, index) {
-                return PlatformListTile(
-                  title: PlatformText(repositories[index].name!),
-                  subtitle: repositories[index].description != null
-                      ? PlatformText(repositories[index].description!)
-                      : null,
-                  trailing: PlatformText(
-                    repositories[index].stargazersCount.toString(),
-                  ),
-                );
-              },
-            ),
-          ),
-        );
-      },
-      loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (err, stack) => Center(child: PlatformText('Error: $err')),
+      ),
     );
   }
 }
