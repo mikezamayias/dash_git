@@ -12,7 +12,7 @@ class DashGitWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fontFamily = GoogleFonts.ubuntu().fontFamily;
+    final fontFamily = GoogleFonts.ubuntu().fontFamily!;
     return PlatformProvider(
       settings: PlatformSettingsData(
         iosUsesMaterialWidgets: true,
@@ -20,31 +20,10 @@ class DashGitWrapper extends StatelessWidget {
       ),
       builder: (BuildContext context) => PlatformTheme(
         themeMode: ThemeMode.system,
-        materialLightTheme: ThemeData(
-          fontFamily: fontFamily,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.purple,
-          ),
-          useMaterial3: true,
-        ),
-        materialDarkTheme: ThemeData(
-          fontFamily: fontFamily,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.purple,
-            brightness: Brightness.dark,
-          ),
-          useMaterial3: true,
-        ),
-        cupertinoLightTheme: const CupertinoThemeData(
-          brightness: Brightness.light,
-          primaryColor: Colors.purple,
-          applyThemeToAll: true,
-        ),
-        cupertinoDarkTheme: const CupertinoThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Colors.purple,
-          applyThemeToAll: true,
-        ),
+        materialLightTheme: _buildMaterialTheme(Brightness.light, fontFamily),
+        materialDarkTheme: _buildMaterialTheme(Brightness.dark, fontFamily),
+        cupertinoLightTheme: _buildCupertinoTheme(Brightness.light, fontFamily),
+        cupertinoDarkTheme: _buildCupertinoTheme(Brightness.dark, fontFamily),
         matchCupertinoSystemChromeBrightness: true,
         builder: (context) => PlatformApp(
           debugShowCheckedModeBanner: false,
@@ -64,6 +43,40 @@ class DashGitWrapper extends StatelessWidget {
           ),
           // home: DashGit(),
         ),
+      ),
+    );
+  }
+
+  ThemeData _buildMaterialTheme(
+    Brightness brightness,
+    String fontFamily,
+  ) {
+    return ThemeData(
+      fontFamily: fontFamily,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.purple,
+        brightness: brightness,
+      ),
+      useMaterial3: true,
+    );
+  }
+
+  CupertinoThemeData _buildCupertinoTheme(
+    Brightness brightness,
+    String fontFamily,
+  ) {
+    return CupertinoThemeData(
+      brightness: brightness,
+      primaryColor: Colors.purple,
+      textTheme: CupertinoTextThemeData(
+        textStyle: TextStyle(fontFamily: fontFamily),
+        actionTextStyle: TextStyle(fontFamily: fontFamily),
+        tabLabelTextStyle: TextStyle(fontFamily: fontFamily),
+        navTitleTextStyle: TextStyle(fontFamily: fontFamily),
+        navLargeTitleTextStyle: TextStyle(fontFamily: fontFamily),
+        navActionTextStyle: TextStyle(fontFamily: fontFamily),
+        pickerTextStyle: TextStyle(fontFamily: fontFamily),
+        dateTimePickerTextStyle: TextStyle(fontFamily: fontFamily),
       ),
     );
   }
