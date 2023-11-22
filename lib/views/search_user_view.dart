@@ -26,7 +26,7 @@ class SearchUserView extends StatelessWidget {
                   controller: textEditingController,
                   decoration: const InputDecoration(
                     hintText: 'Search User',
-                    suffixIcon: Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search),
                   ),
                 ),
               ),
