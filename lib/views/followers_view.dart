@@ -37,18 +37,27 @@ class FollowersView extends ConsumerWidget {
           body: SafeArea(
             child: followerModels.isEmpty
                 ? Center(child: PlatformCircularProgressIndicator())
-                : ListView.builder(
-                    shrinkWrap: true,
+                : GridView.builder(
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
                     itemCount: followerModels.length,
                     itemBuilder: (context, index) {
-                      final follower = followerModels.elementAt(index);
-                      return PlatformListTile(
-                        title: Text('${follower.login}'),
-                        leading: CircleAvatar(
-                          radius: 25,
-                          foregroundColor: Colors.transparent,
-                          backgroundImage: NetworkImage(follower.avatarUrl!),
-                        ),
+                      final follower = followerModels[index];
+                      return Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            foregroundColor: Colors.transparent,
+                            backgroundImage: NetworkImage(follower.avatarUrl!),
+                          ),
+                          const SizedBox(height: 4),
+                          Text('${follower.login}'),
+                        ],
                       );
                     },
                   ),
