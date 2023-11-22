@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 import '../controllers/route_controller.dart';
 import '../models/route_model.dart';
@@ -10,13 +11,19 @@ class DashGit extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Widget> views = RouteController()
+        .routes
+        .map((RouteModel routeModel) => routeModel.view)
+        .toList();
     return PlatformScaffold(
-      appBar: PlatformAppBar(
-        title:
-            PlatformText(ref.watch(RouteController.currentRouteProvider).label),
-      ),
       body: SafeArea(
-        child: ref.watch(RouteController.currentRouteProvider).view,
+        child: PreloadPageView.builder(
+          itemBuilder: (context, index) => views.elementAt(ref
+              .watch(RouteController.currentRouteIndexProvider.notifier)
+              .state),
+          itemCount: views.length,
+          preloadPagesCount: views.length,
+        ),
       ),
       bottomNavBar: PlatformNavBar(
         items: <BottomNavigationBarItem>[
