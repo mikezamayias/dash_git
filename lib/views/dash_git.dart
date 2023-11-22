@@ -6,6 +6,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import '../controllers/route_controller.dart';
 import '../models/route_model.dart';
+import '../wrappers/keep_alive_wrapper.dart';
 
 class DashGit extends ConsumerWidget {
   const DashGit({super.key});
@@ -14,7 +15,9 @@ class DashGit extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Widget> views = RouteController()
         .routes
-        .map((RouteModel routeModel) => routeModel.view)
+        .map(
+          (RouteModel routeModel) => KeepAliveWrapper(child: routeModel.view),
+        )
         .toList();
     return PlatformScaffold(
       backgroundColor: platformThemeData(
