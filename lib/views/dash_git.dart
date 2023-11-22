@@ -27,7 +27,7 @@ class DashGit extends ConsumerWidget {
             );
           })
         ],
-        itemChanged: (index) {
+        itemChanged: (int index) {
           ref.read(RouteController.currentRouteIndexProvider.notifier).state =
               index;
         },
