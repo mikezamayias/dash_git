@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,11 @@ class DashGit extends ConsumerWidget {
         .map((RouteModel routeModel) => routeModel.view)
         .toList();
     return PlatformScaffold(
+      backgroundColor: platformThemeData(
+        context,
+        material: (ThemeData data) => data.scaffoldBackgroundColor,
+        cupertino: (CupertinoThemeData data) => data.barBackgroundColor,
+      ),
       body: SafeArea(
         child: PreloadPageView.builder(
           itemBuilder: (context, index) => views.elementAt(ref
