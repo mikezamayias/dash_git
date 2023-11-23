@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SearchUserView extends StatelessWidget {
+import '../models/user_model.dart';
+import '../providers/user_provider.dart';
+
+class SearchUserView extends ConsumerWidget {
   const SearchUserView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textEditingController = TextEditingController();
+    String? searchQuery = ref.watch(searchQueryProvider);
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: const Text('Search User'),
@@ -33,23 +38,66 @@ class SearchUserView extends StatelessWidget {
               const SizedBox(height: 16),
               PlatformElevatedButton(
                 child: PlatformText('Search'),
-                onPressed: () {
-                  showPlatformDialog(
-                    context: context,
-                    builder: (_) => PlatformAlertDialog(
-                      title: const Text('Search User'),
-                      content: Text(
-                          'You have searched for ${textEditingController.text}'),
-                      actions: <Widget>[
-                        PlatformDialogAction(
-                          child: PlatformText('OK'),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                onPressed: () => searchQuery = textEditingController.text,
               ),
+              const SizedBox(height: 16),
+              if (searchQuery != null)
+                ref.watch(searchUserProvider(searchQuery)).when(
+                      data: (UserModel userModel) {
+                        return Column(
+                          children: [
+                            const SizedBox(height: 16),
+                            CircleAvatar(
+                              radius: 50,
+                              foregroundColor: Colors.transparent,
+                              backgroundImage:
+                                  NetworkImage(userModel.avatarUrl!),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              userModel.name!,
+                              style: platformThemeData(
+                                context,
+                                material: (data) => data.textTheme.titleMedium,
+                                cupertino: (data) =>
+                                    data.textTheme.navTitleTextStyle,
+                              ),
+                            ),
+                            Text(
+                              '@${userModel.login!}',
+                              style: platformThemeData(
+                                context,
+                                material: (data) => data.textTheme.titleMedium,
+                                cupertino: (data) =>
+                                    data.textTheme.navTitleTextStyle,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              userModel.location!,
+                              style: platformThemeData(
+                                context,
+                                material: (data) => data.textTheme.titleMedium,
+                                cupertino: (data) => data.textTheme.textStyle,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              userModel.bio!,
+                              style: platformThemeData(
+                                context,
+                                material: (data) => data.textTheme.titleMedium,
+                                cupertino: (data) => data.textTheme.textStyle,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      loading: () => Center(
+                        child: PlatformCircularProgressIndicator(),
+                      ),
+                      error: (error, stack) => Center(child: Text('$error')),
+                    ),
             ],
           ),
         ),

@@ -118,7 +118,7 @@ class UserProfileView extends ConsumerWidget {
         );
       },
       loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (error, stack) => Center(child: Text('$error')),
     );
   }
 }
