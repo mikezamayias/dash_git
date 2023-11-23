@@ -19,7 +19,6 @@ class FollowersView extends ConsumerWidget {
         cupertino: (data) => CupertinoColors.systemGroupedBackground,
         material: (data) => data.colorScheme.surface,
       ),
-      padding: const EdgeInsets.all(16),
       child: followersAsyncValue.when(
         loading: () => Center(child: PlatformCircularProgressIndicator()),
         error: (error, _) => Center(child: PlatformText('Error: $error')),
@@ -33,7 +32,6 @@ class FollowersView extends ConsumerWidget {
           );
 
           final widgets = <Widget>[
-            header,
             for (final followerModel in followerModels)
               PlatformListTile(
                 leading: CircleAvatar(
@@ -45,10 +43,28 @@ class FollowersView extends ConsumerWidget {
               ),
           ];
 
-          return ListView.builder(
+          return SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
-            itemCount: widgets.length,
-            itemBuilder: (context, index) => widgets.elementAt(index),
+            child: PlatformWidget(
+              cupertino: (context, _) => CupertinoListSection.insetGrouped(
+                topMargin: 0,
+                hasLeading: false,
+                header: header,
+                children: widgets,
+              ),
+              material: (context, _) => Column(
+                children: [
+                  header,
+                  Expanded(
+                    child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: widgets.length,
+                      itemBuilder: (context, index) => widgets.elementAt(index),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),

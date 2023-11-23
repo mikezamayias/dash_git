@@ -19,7 +19,33 @@ class DashGit extends ConsumerWidget {
     List<Widget> views = RouteController()
         .routes
         .map(
-          (RouteModel routeModel) => KeepAliveWrapper(child: routeModel.view),
+          (RouteModel routeModel) => KeepAliveWrapper(
+            child: Container(
+              color: platformThemeData(
+                context,
+                cupertino: (data) => CupertinoColors.systemGroupedBackground,
+                material: (data) => data.colorScheme.surface,
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                reverseDuration: const Duration(milliseconds: 300),
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                child: ref.watch(usernameQueryProvider) == null
+                    ? Center(
+                        child: PlatformText(
+                          'Search for a user to view their ${routeModel.label.toLowerCase()}.',
+                          style: platformThemeData(
+                            context,
+                            material: (data) => data.textTheme.bodyMedium,
+                            cupertino: (data) => data.textTheme.textStyle,
+                          ),
+                        ),
+                      )
+                    : routeModel.view,
+              ),
+            ),
+          ),
         )
         .toList();
 

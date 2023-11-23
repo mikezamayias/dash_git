@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,12 +10,7 @@ class UserProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      color: platformThemeData(
-        context,
-        cupertino: (data) => CupertinoColors.systemGroupedBackground,
-        material: (data) => data.colorScheme.surface,
-      ),
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: ref.watch(userProvider).when(
             data: (UserModel userProfile) {

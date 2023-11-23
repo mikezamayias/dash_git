@@ -68,6 +68,8 @@ class RepositoriesView extends ConsumerWidget {
           physics: const ClampingScrollPhysics(),
           child: PlatformWidget(
             cupertino: (context, _) => CupertinoListSection.insetGrouped(
+              topMargin: 0,
+              hasLeading: false,
               header: header,
               children: widgets,
             ),
