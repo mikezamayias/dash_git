@@ -12,7 +12,8 @@ class SearchUserView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditingController = TextEditingController();
-    String? searchQuery = ref.watch(searchQueryProvider);
+    final searchQuery = ref.watch(searchQueryProvider);
+
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: const Text('Search User'),
@@ -36,68 +37,141 @@ class SearchUserView extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              PlatformElevatedButton(
-                child: PlatformText('Search'),
-                onPressed: () => searchQuery = textEditingController.text,
+              ValueListenableBuilder(
+                valueListenable: textEditingController,
+                builder: (context, value, child) {
+                  return PlatformElevatedButton(
+                    onPressed: textEditingController.text.isNotEmpty
+                        ? () {
+                            ref.read(searchQueryProvider.notifier).state =
+                                textEditingController.text;
+                          }
+                        : null,
+                    child: PlatformText('Search'),
+                  );
+                },
               ),
-              const SizedBox(height: 16),
-              if (searchQuery != null)
-                ref.watch(searchUserProvider(searchQuery)).when(
+              if (searchQuery != null && searchQuery.isNotEmpty)
+                ref.watch(userProvider(searchQuery)).when(
                       data: (UserModel userModel) {
-                        return Column(
-                          children: [
-                            const SizedBox(height: 16),
-                            CircleAvatar(
-                              radius: 50,
-                              foregroundColor: Colors.transparent,
-                              backgroundImage:
-                                  NetworkImage(userModel.avatarUrl!),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              userModel.name!,
-                              style: platformThemeData(
-                                context,
-                                material: (data) => data.textTheme.titleMedium,
-                                cupertino: (data) =>
-                                    data.textTheme.navTitleTextStyle,
+                        return Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                foregroundColor: Colors.transparent,
+                                backgroundImage:
+                                    NetworkImage(userModel.avatarUrl!),
                               ),
-                            ),
-                            Text(
-                              '@${userModel.login!}',
-                              style: platformThemeData(
-                                context,
-                                material: (data) => data.textTheme.titleMedium,
-                                cupertino: (data) =>
-                                    data.textTheme.navTitleTextStyle,
+                              const SizedBox(height: 16),
+                              Text(
+                                '${userModel.name}',
+                                style: platformThemeData(
+                                  context,
+                                  material: (data) =>
+                                      data.textTheme.titleMedium,
+                                  cupertino: (data) =>
+                                      data.textTheme.navTitleTextStyle,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              userModel.location!,
-                              style: platformThemeData(
-                                context,
-                                material: (data) => data.textTheme.titleMedium,
-                                cupertino: (data) => data.textTheme.textStyle,
+                              Text(
+                                '@${userModel.login!}',
+                                style: platformThemeData(
+                                  context,
+                                  material: (data) =>
+                                      data.textTheme.titleMedium,
+                                  cupertino: (data) =>
+                                      data.textTheme.navTitleTextStyle,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              userModel.bio!,
-                              style: platformThemeData(
-                                context,
-                                material: (data) => data.textTheme.titleMedium,
-                                cupertino: (data) => data.textTheme.textStyle,
+                              const SizedBox(height: 16),
+                              Text(
+                                '${userModel.location}',
+                                style: platformThemeData(
+                                  context,
+                                  material: (data) =>
+                                      data.textTheme.titleMedium,
+                                  cupertino: (data) => data.textTheme.textStyle,
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 16),
+                              Text(
+                                '${userModel.bio}',
+                                style: platformThemeData(
+                                  context,
+                                  material: (data) => data.textTheme.bodyMedium,
+                                  cupertino: (data) => data.textTheme.textStyle,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  // location
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Followers',
+                                        style: platformThemeData(
+                                          context,
+                                          material: (data) =>
+                                              data.textTheme.titleMedium,
+                                          cupertino: (data) =>
+                                              data.textTheme.navTitleTextStyle,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${userModel.followers}',
+                                        style: platformThemeData(
+                                          context,
+                                          material: (data) =>
+                                              data.textTheme.bodyMedium,
+                                          cupertino: (data) =>
+                                              data.textTheme.textStyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Public Repos',
+                                        style: platformThemeData(
+                                          context,
+                                          material: (data) =>
+                                              data.textTheme.titleMedium,
+                                          cupertino: (data) =>
+                                              data.textTheme.navTitleTextStyle,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${userModel.publicRepos}',
+                                        style: platformThemeData(
+                                          context,
+                                          material: (data) =>
+                                              data.textTheme.bodyMedium,
+                                          cupertino: (data) =>
+                                              data.textTheme.textStyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       },
                       loading: () => Center(
                         child: PlatformCircularProgressIndicator(),
                       ),
                       error: (error, stack) => Center(child: Text('$error')),
-                    ),
+                    )
+              else
+                const SizedBox.shrink(),
             ],
           ),
         ),
