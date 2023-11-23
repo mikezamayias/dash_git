@@ -1,9 +1,7 @@
-import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../models/follower_model.dart';
 import '../providers/followers_provider.dart';
@@ -13,61 +11,47 @@ class FollowersView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followerModels = ref.watch(followersProvider(null));
-    return followerModels.when(
-      data: (List<FollowerModel> followerModels) {
-        return PlatformScaffold(
-          appBar: PlatformAppBar(
-            title: const Text('Followers'),
-            trailingActions: [
-              Icon(PlatformIcons(context).person),
-              Center(
-                child: Text(
-                  '${followerModels.length}',
-                  style: platformThemeData(
-                    context,
-                    material: (data) => data.textTheme.bodyLarge,
-                    cupertino: (data) =>
-                        data.textTheme.navTitleTextStyle.copyWith(
-                      color: data.primaryColor,
-                      fontSize: 20,
-                    ),
-                  ),
+    final followersAsyncValue = ref.watch(followersProvider);
+
+    return Container(
+      color: platformThemeData(
+        context,
+        cupertino: (data) => CupertinoColors.systemGroupedBackground,
+        material: (data) => data.colorScheme.surface,
+      ),
+      padding: const EdgeInsets.all(16),
+      child: followersAsyncValue.when(
+        loading: () => Center(child: PlatformCircularProgressIndicator()),
+        error: (error, _) => Center(child: PlatformText('Error: $error')),
+        data: (List<FollowerModel> followerModels) {
+          if (followerModels.isEmpty) {
+            return Center(child: PlatformText('No followers found.'));
+          }
+
+          final header = PlatformListTile(
+            title: Text('Number of followers: ${followerModels.length}'),
+          );
+
+          final widgets = <Widget>[
+            header,
+            for (final followerModel in followerModels)
+              PlatformListTile(
+                leading: CircleAvatar(
+                  radius: 20,
+                  foregroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage('${followerModel.avatarUrl}'),
                 ),
+                title: PlatformText('${followerModel.login}'),
               ),
-              if (Platform.isAndroid) const SizedBox(width: 16),
-            ],
-          ),
-          body: SafeArea(
-            child: followerModels.isEmpty
-                ? Center(child: PlatformCircularProgressIndicator())
-                : AlignedGridView.count(
-                    itemCount: followerModels.length,
-                    padding: const EdgeInsets.all(16),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    itemBuilder: (context, index) {
-                      final followerModel = followerModels.elementAt(index);
-                      return Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            foregroundColor: Colors.transparent,
-                            backgroundImage:
-                                NetworkImage(followerModel.avatarUrl!),
-                          ),
-                          const SizedBox(height: 8),
-                          Text('@${followerModel.login}'),
-                        ],
-                      );
-                    },
-                  ),
-          ),
-        );
-      },
-      loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('$error')),
+          ];
+
+          return ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            itemCount: widgets.length,
+            itemBuilder: (context, index) => widgets.elementAt(index),
+          );
+        },
+      ),
     );
   }
 }

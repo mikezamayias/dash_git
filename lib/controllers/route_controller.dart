@@ -36,7 +36,7 @@ class RouteController {
   static final followersRoute = RouteModel(
     label: 'Followers',
     icon: Builder(
-      builder: (context) => Icon(context.platformIcons.person),
+      builder: (context) => Icon(context.platformIcons.personSolid),
     ),
     view: const FollowersView(),
   );
@@ -51,7 +51,7 @@ class RouteController {
     userProfileRoute,
     repositoriesRoute,
     followersRoute,
-    searchRoute,
+    // searchRoute,
   ];
   static StateProvider<int> currentRouteIndexProvider =
       StateProvider((ref) => 0);

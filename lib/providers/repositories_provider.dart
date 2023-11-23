@@ -5,13 +5,13 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-import '../controllers/token_controller.dart';
 import '../models/repository_model.dart';
+import 'query_provider.dart';
 
 final sortedRepositoriesProvider =
     StateNotifierProvider<SortedRepositoriesNotifier, List<RepositoryModel>>(
         (ref) {
-  final repositories = ref.watch(repositoriesProvider(null)).value ?? [];
+  final repositories = ref.watch(repositoriesProvider).value ?? [];
   return SortedRepositoriesNotifier(repositories);
 });
 
@@ -28,19 +28,17 @@ class SortedRepositoriesNotifier extends StateNotifier<List<RepositoryModel>> {
   }
 }
 
-final repositoriesProvider =
-    FutureProvider.family<List<RepositoryModel>, String?>(
-  (ref, username) async {
+final repositoriesProvider = FutureProvider<List<RepositoryModel>>(
+  (ref) async {
     try {
-      final tokenModel = ref.watch(tokenControllerProvider);
-      final path = username == null ? '/user/repos' : '/users/$username/repos';
+      final String usernameQuery =
+          ref.watch(usernameQueryProvider) ?? 'mikezamayias';
+      final path = '/users/$usernameQuery/repos';
       final response = await http.get(
         Uri.https('api.github.com', path),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
-          if (tokenModel != null)
-            'Authorization': 'Bearer ${tokenModel.accessToken}',
         },
       );
       log('${response.statusCode}', name: 'repositoriesProvider:statusCode');

@@ -4,6 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/user_model.dart';
+import '../providers/query_provider.dart';
 import '../providers/user_provider.dart';
 
 class SearchUserView extends ConsumerWidget {
@@ -12,7 +13,7 @@ class SearchUserView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditingController = TextEditingController();
-    final searchQuery = ref.watch(searchQueryProvider);
+    final searchQuery = ref.watch(usernameQueryProvider);
 
     return PlatformScaffold(
       appBar: PlatformAppBar(
@@ -43,7 +44,7 @@ class SearchUserView extends ConsumerWidget {
                   return PlatformElevatedButton(
                     onPressed: textEditingController.text.isNotEmpty
                         ? () {
-                            ref.read(searchQueryProvider.notifier).state =
+                            ref.read(usernameQueryProvider.notifier).state =
                                 textEditingController.text;
                           }
                         : null,
@@ -52,7 +53,7 @@ class SearchUserView extends ConsumerWidget {
                 },
               ),
               if (searchQuery != null && searchQuery.isNotEmpty)
-                ref.watch(userProvider(searchQuery)).when(
+                ref.watch(userProvider).when(
                       data: (UserModel userModel) {
                         return Padding(
                           padding: const EdgeInsets.all(16),

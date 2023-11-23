@@ -10,14 +10,32 @@ class RepositoriesView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repositoriesAsyncValue = ref.watch(repositoriesProvider(null));
+    final repositoriesAsyncValue = ref.watch(repositoriesProvider);
     final repositoryModels = ref.watch(sortedRepositoriesProvider);
 
-    return PlatformScaffold(
-      appBar: PlatformAppBar(
-        title: PlatformText('Repositories'),
-        trailingActions: [
-          AnimatedOpacity(
+    return repositoriesAsyncValue.when(
+      loading: () => Center(child: PlatformCircularProgressIndicator()),
+      error: (error, _) => Center(child: PlatformText('Error: $error')),
+      data: (data) {
+        // Check if repository list is empty
+        if (repositoryModels.isEmpty) {
+          return Center(child: PlatformText('No repositories found.'));
+        }
+
+        final widgets = <Widget>[
+          for (final repositoryModel in repositoryModels)
+            PlatformListTile(
+              title: PlatformText(repositoryModel.name ?? ''),
+              subtitle: repositoryModel.description != null
+                  ? PlatformText(repositoryModel.description!)
+                  : null,
+              trailing:
+                  PlatformText(repositoryModel.stargazersCount.toString()),
+            ),
+        ];
+        final header = PlatformListTile(
+          title: Text('Number of repositories: ${repositoryModels.length}'),
+          trailing: AnimatedOpacity(
             opacity: repositoryModels.isEmpty ? 0 : 1,
             duration: const Duration(milliseconds: 300),
             child: PlatformPopupMenu(
@@ -44,35 +62,30 @@ class RepositoriesView extends ConsumerWidget {
               ),
             ),
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: repositoriesAsyncValue.when(
-          loading: () => Center(child: PlatformCircularProgressIndicator()),
-          error: (error, _) => Center(child: PlatformText('Error: $error')),
-          data: (data) {
-            // Check if repository list is empty
-            if (repositoryModels.isEmpty) {
-              return Center(child: PlatformText('No repositories found.'));
-            }
-
-            // Display list of repositories
-            return ListView.builder(
-              itemCount: repositoryModels.length,
-              itemBuilder: (context, index) {
-                final repo = repositoryModels[index];
-                return PlatformListTile(
-                  title: PlatformText(repo.name ?? ''),
-                  subtitle: repo.description != null
-                      ? PlatformText(repo.description!)
-                      : null,
-                  trailing: PlatformText(repo.stargazersCount.toString()),
-                );
-              },
-            );
-          },
-        ),
-      ),
+        );
+        // Display list of repositories
+        return SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: PlatformWidget(
+            cupertino: (context, _) => CupertinoListSection.insetGrouped(
+              header: header,
+              children: widgets,
+            ),
+            material: (context, _) => Column(
+              children: [
+                header,
+                Expanded(
+                  child: ListView.builder(
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: widgets.length,
+                    itemBuilder: (context, index) => widgets.elementAt(index),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

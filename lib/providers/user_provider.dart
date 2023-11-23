@@ -5,23 +5,20 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-import '../controllers/token_controller.dart';
 import '../models/user_model.dart';
+import 'query_provider.dart';
 
-final searchQueryProvider = StateProvider<String?>((ref) => null);
-
-final userProvider = FutureProvider.family<UserModel, String?>(
-  (ref, username) async {
+final userProvider = FutureProvider<UserModel>(
+  (ref) async {
     try {
-      final tokenModel = ref.watch(tokenControllerProvider);
-      final path = username == null ? '/user' : '/users/$username';
+      final String usernameQuery =
+          ref.watch(usernameQueryProvider) ?? 'mikezamayias';
+      final path = '/users/$usernameQuery';
       final response = await http.get(
         Uri.https('api.github.com', path),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
-          if (tokenModel != null)
-            'Authorization': 'Bearer ${tokenModel.accessToken}',
         },
       );
       log('${response.statusCode}', name: 'userProvider:statusCode');
