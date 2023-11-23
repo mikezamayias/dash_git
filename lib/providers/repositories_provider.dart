@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import '../models/repository_model.dart';
 import 'query_provider.dart';
 
+final StateProvider<bool> ascendingOrderProvider =
+    StateProvider<bool>((ref) => true);
+
 final repositoriesProvider = StateNotifierProvider<RepositoriesNotifier,
     AsyncValue<List<RepositoryModel>>>((ref) {
   return RepositoriesNotifier(ref);
@@ -44,12 +47,14 @@ class RepositoriesNotifier
   }
 
   void sortByStars() {
-    state = state.whenData((repositories) => [...repositories]..sort(
-        (a, b) => (b.stargazersCount ?? 0).compareTo(a.stargazersCount ?? 0)));
-  }
-
-  void sortByName() {
-    state = state.whenData((repositories) => [...repositories]
-      ..sort((a, b) => (a.name ?? '').compareTo(b.name ?? '')));
+    state = state.whenData(
+      (repositories) => [...repositories]..sort(
+          (a, b) => ref.read(ascendingOrderProvider)
+              ? (a.stargazersCount ?? 0).compareTo(b.stargazersCount ?? 0)
+              : (b.stargazersCount ?? 0).compareTo(a.stargazersCount ?? 0),
+        ),
+    );
+    ref.read(ascendingOrderProvider.notifier).state =
+        !ref.read(ascendingOrderProvider.notifier).state;
   }
 }
