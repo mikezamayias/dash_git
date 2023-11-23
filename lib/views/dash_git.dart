@@ -31,9 +31,10 @@ class DashGit extends ConsumerWidget {
               reverseDuration: const Duration(milliseconds: 300),
               switchInCurve: Curves.easeInOut,
               switchOutCurve: Curves.easeInOut,
-              child: ref.watch(usernameQueryProvider) == null
-                  ? SelectUser(label: routeModel.label.toLowerCase())
-                  : routeModel.view,
+              child: ref.watch(usernameQueryProvider) != null &&
+                      ref.watch(usernameQueryProvider)!.isNotEmpty
+                  ? routeModel.view
+                  : SelectUser(label: routeModel.label.toLowerCase()),
             ),
           ),
         );
@@ -52,48 +53,7 @@ class DashGit extends ConsumerWidget {
           PlatformIconButton(
             icon: Icon(context.platformIcons.search),
             onPressed: () {
-              showPlatformDialog(
-                context: context,
-                builder: (_) => PlatformAlertDialog(
-                  title: const Text('Search for a user'),
-                  content: Column(
-                    children: [
-                      PlatformWidget(
-                        cupertino: (context, _) => CupertinoSearchTextField(
-                          controller: textEditingController,
-                          placeholder: 'Search User',
-                        ),
-                        material: (context, _) => TextField(
-                          controller: textEditingController,
-                          decoration: const InputDecoration(
-                            hintText: 'Search User',
-                            prefixIcon: Icon(Icons.search),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    PlatformDialogAction(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: textEditingController,
-                      builder: (context, value, child) {
-                        return PlatformDialogAction(
-                          onPressed: () {
-                            ref.read(usernameQueryProvider.notifier).state =
-                                textEditingController.text;
-                            context.navigator.pop();
-                          },
-                          child: const Text('Search'),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
+              showCustomDialog(context, textEditingController);
             },
           ),
         ],
@@ -123,6 +83,59 @@ class DashGit extends ConsumerWidget {
           ref.read(RouteController.currentRouteIndexProvider.notifier).state =
               index;
         },
+      ),
+    );
+  }
+
+  Future<dynamic> showCustomDialog(
+    BuildContext context,
+    TextEditingController textEditingController,
+  ) {
+    return showPlatformDialog(
+      context: context,
+      builder: (_) => PlatformAlertDialog(
+        title: const Text('Search for a user'),
+        content: PlatformWidget(
+          cupertino: (context, _) => Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: CupertinoSearchTextField(
+              controller: textEditingController,
+              placeholder: 'username',
+            ),
+          ),
+          material: (context, _) => TextField(
+            controller: textEditingController,
+            decoration: const InputDecoration(
+              hintText: 'username',
+              prefixIcon: Icon(Icons.search),
+            ),
+          ),
+        ),
+        actions: [
+          PlatformDialogAction(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          ValueListenableBuilder(
+            valueListenable: textEditingController,
+            builder: (context, value, child) {
+              return Consumer(
+                builder: (context, ref, child) {
+                  return PlatformDialogAction(
+                    onPressed: textEditingController.text.isEmpty
+                        ? null
+                        : () {
+                            ref.read(usernameQueryProvider.notifier).state =
+                                textEditingController.text;
+                            context.navigator.pop();
+                          },
+                    child: const Text('Search'),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
