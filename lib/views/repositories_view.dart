@@ -19,7 +19,7 @@ class RepositoriesView extends ConsumerWidget {
       data: (List<RepositoryModel> repositoryModels) {
         // Check if repository list is empty
         if (repositoryModels.isEmpty) {
-          return Center(child: Text('No repositories found.'));
+          return const Center(child: Text('No repositories found.'));
         }
 
         final widgets = <Widget>[

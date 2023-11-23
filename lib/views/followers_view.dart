@@ -24,7 +24,7 @@ class FollowersView extends ConsumerWidget {
         error: (error, _) => Center(child: Text('$error')),
         data: (List<FollowerModel> followerModels) {
           if (followerModels.isEmpty) {
-            return Center(child: Text('No followers found.'));
+            return const Center(child: Text('No followers found.'));
           }
 
           final header = PlatformListTile(

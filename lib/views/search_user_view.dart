@@ -48,7 +48,7 @@ class SearchUserView extends ConsumerWidget {
                                 textEditingController.text;
                           }
                         : null,
-                    child: Text('Search'),
+                    child: const Text('Search'),
                   );
                 },
               ),

@@ -87,7 +87,7 @@ class DashGit extends ConsumerWidget {
                                 textEditingController.text;
                             context.navigator.pop();
                           },
-                          child: Text('Search'),
+                          child: const Text('Search'),
                         );
                       },
                     ),
