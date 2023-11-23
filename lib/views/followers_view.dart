@@ -13,7 +13,7 @@ class FollowersView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followerModels = ref.watch(followersProvider);
+    final followerModels = ref.watch(followersProvider(null));
     return followerModels.when(
       data: (List<FollowerModel> followerModels) {
         return PlatformScaffold(

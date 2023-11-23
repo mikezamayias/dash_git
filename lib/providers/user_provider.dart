@@ -10,7 +10,7 @@ import '../models/user_model.dart';
 
 final searchQueryProvider = StateProvider<String?>((ref) => null);
 
-final userProvider = FutureProvider.autoDispose.family<UserModel, String?>(
+final userProvider = FutureProvider.family<UserModel, String?>(
   (ref, username) async {
     try {
       final tokenModel = TokenController().tokenModel!;
@@ -23,9 +23,9 @@ final userProvider = FutureProvider.autoDispose.family<UserModel, String?>(
           'Authorization': 'Bearer ${tokenModel.accessToken}',
         },
       );
-      log('${response.statusCode}', name: 'fetchUser:statusCode');
+      log('${response.statusCode}', name: 'userProvider:statusCode');
       if (response.statusCode == 200) {
-        log('${jsonDecode(response.body)}', name: 'fetchUser:body');
+        log('${jsonDecode(response.body)}', name: 'userProvider:body');
         return UserModel.fromJson(jsonDecode(response.body));
       } else if (response.statusCode == 304) {
         throw Exception('Data not modified since last request.');
