@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/follower_model.dart';
 import '../providers/followers_provider.dart';
+import '../widgets/list_with_header.dart';
 
 class FollowersView extends ConsumerWidget {
   const FollowersView({super.key});
@@ -39,33 +40,18 @@ class FollowersView extends ConsumerWidget {
                   foregroundColor: Colors.transparent,
                   backgroundImage: NetworkImage('${followerModel.avatarUrl}'),
                 ),
-                title: Text('${followerModel.login}'),
+                title: Text(
+                  '${followerModel.login}',
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.bodyLarge,
+                    cupertino: (data) => data.textTheme.textStyle,
+                  ),
+                ),
               ),
           ];
 
-          return SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: PlatformWidget(
-              cupertino: (context, _) => CupertinoListSection.insetGrouped(
-                topMargin: 0,
-                hasLeading: false,
-                header: header,
-                children: widgets,
-              ),
-              material: (context, _) => Column(
-                children: [
-                  header,
-                  Expanded(
-                    child: ListView.builder(
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: widgets.length,
-                      itemBuilder: (context, index) => widgets.elementAt(index),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return ListWithHeader(header: header, widgets: widgets);
         },
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/repository_model.dart';
 import '../providers/repositories_provider.dart';
+import '../widgets/list_with_header.dart';
 
 class RepositoriesView extends ConsumerWidget {
   const RepositoriesView({super.key});
@@ -25,11 +26,30 @@ class RepositoriesView extends ConsumerWidget {
         final widgets = <Widget>[
           for (final repositoryModel in repositoryModels)
             PlatformListTile(
-              title: Text(repositoryModel.name ?? ''),
-              subtitle: repositoryModel.description != null
-                  ? Text(repositoryModel.description!)
-                  : null,
-              trailing: Text(repositoryModel.stargazersCount.toString()),
+              title: Text(
+                '${repositoryModel.name}',
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodyLarge,
+                  cupertino: (data) => data.textTheme.textStyle,
+                ),
+              ),
+              subtitle: Text(
+                '${repositoryModel.description}',
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodySmall,
+                  cupertino: (data) => data.textTheme.textStyle,
+                ),
+              ),
+              trailing: Text(
+                '${repositoryModel.stargazersCount}',
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodyLarge,
+                  cupertino: (data) => data.textTheme.textStyle,
+                ),
+              ),
             ),
         ];
         final header = PlatformListTile(
@@ -41,15 +61,10 @@ class RepositoriesView extends ConsumerWidget {
               options: <PopupMenuOption>[
                 PopupMenuOption(
                   label: 'Stars',
-                  onTap: (_) =>
-                      ref.read(repositoriesProvider.notifier).sortByStars(),
+                  onTap: (_) {
+                    ref.read(repositoriesProvider.notifier).sortByStars();
+                  },
                 ),
-                PopupMenuOption(
-                  label: 'Names',
-                  onTap: (_) =>
-                      ref.read(repositoriesProvider.notifier).sortByName(),
-                ),
-                // Add other sorting options here
               ],
               icon: Icon(
                 context.platformIcon(
@@ -60,30 +75,7 @@ class RepositoriesView extends ConsumerWidget {
             ),
           ),
         );
-        // Display list of repositories
-        return SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: PlatformWidget(
-            cupertino: (context, _) => CupertinoListSection.insetGrouped(
-              topMargin: 0,
-              hasLeading: false,
-              header: header,
-              children: widgets,
-            ),
-            material: (context, _) => Column(
-              children: [
-                header,
-                Expanded(
-                  child: ListView.builder(
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: widgets.length,
-                    itemBuilder: (context, index) => widgets.elementAt(index),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        return ListWithHeader(header: header, widgets: widgets);
       },
     );
   }
