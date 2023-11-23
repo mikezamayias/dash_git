@@ -11,8 +11,7 @@ import 'query_provider.dart';
 final userProvider = FutureProvider<UserModel>(
   (ref) async {
     try {
-      final String usernameQuery =
-          ref.watch(usernameQueryProvider) ?? 'mikezamayias';
+      final String usernameQuery = ref.watch(usernameQueryProvider)!;
       final path = '/users/$usernameQuery';
       final response = await http.get(
         Uri.https('api.github.com', path),

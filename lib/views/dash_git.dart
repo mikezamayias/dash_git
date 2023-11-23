@@ -82,15 +82,12 @@ class DashGit extends ConsumerWidget {
                       valueListenable: textEditingController,
                       builder: (context, value, child) {
                         return PlatformDialogAction(
-                          onPressed: textEditingController.text.isNotEmpty
-                              ? () {
-                                  ref
-                                      .read(usernameQueryProvider.notifier)
-                                      .state = textEditingController.text;
-                                  context.navigator.pop();
-                                }
-                              : null,
-                          child: PlatformText('Search'),
+                          onPressed: () {
+                            ref.read(usernameQueryProvider.notifier).state =
+                                textEditingController.text;
+                            context.navigator.pop();
+                          },
+                          child: Text('Search'),
                         );
                       },
                     ),

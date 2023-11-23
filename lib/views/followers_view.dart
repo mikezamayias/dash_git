@@ -21,10 +21,10 @@ class FollowersView extends ConsumerWidget {
       ),
       child: followersAsyncValue.when(
         loading: () => Center(child: PlatformCircularProgressIndicator()),
-        error: (error, _) => Center(child: PlatformText('Error: $error')),
+        error: (error, _) => Center(child: Text('$error')),
         data: (List<FollowerModel> followerModels) {
           if (followerModels.isEmpty) {
-            return Center(child: PlatformText('No followers found.'));
+            return Center(child: Text('No followers found.'));
           }
 
           final header = PlatformListTile(
@@ -39,7 +39,7 @@ class FollowersView extends ConsumerWidget {
                   foregroundColor: Colors.transparent,
                   backgroundImage: NetworkImage('${followerModel.avatarUrl}'),
                 ),
-                title: PlatformText('${followerModel.login}'),
+                title: Text('${followerModel.login}'),
               ),
           ];
 

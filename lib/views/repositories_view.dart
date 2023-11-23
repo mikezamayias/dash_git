@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/repository_model.dart';
 import '../providers/repositories_provider.dart';
 
 class RepositoriesView extends ConsumerWidget {
@@ -11,26 +12,24 @@ class RepositoriesView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final repositoriesAsyncValue = ref.watch(repositoriesProvider);
-    final repositoryModels = ref.watch(sortedRepositoriesProvider);
 
     return repositoriesAsyncValue.when(
       loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (error, _) => Center(child: PlatformText('Error: $error')),
-      data: (data) {
+      error: (error, _) => Center(child: Text('$error')),
+      data: (List<RepositoryModel> repositoryModels) {
         // Check if repository list is empty
         if (repositoryModels.isEmpty) {
-          return Center(child: PlatformText('No repositories found.'));
+          return Center(child: Text('No repositories found.'));
         }
 
         final widgets = <Widget>[
           for (final repositoryModel in repositoryModels)
             PlatformListTile(
-              title: PlatformText(repositoryModel.name ?? ''),
+              title: Text(repositoryModel.name ?? ''),
               subtitle: repositoryModel.description != null
-                  ? PlatformText(repositoryModel.description!)
+                  ? Text(repositoryModel.description!)
                   : null,
-              trailing:
-                  PlatformText(repositoryModel.stargazersCount.toString()),
+              trailing: Text(repositoryModel.stargazersCount.toString()),
             ),
         ];
         final header = PlatformListTile(
@@ -42,15 +41,13 @@ class RepositoriesView extends ConsumerWidget {
               options: <PopupMenuOption>[
                 PopupMenuOption(
                   label: 'Stars',
-                  onTap: (_) => ref
-                      .read(sortedRepositoriesProvider.notifier)
-                      .sortByStars(),
+                  onTap: (_) =>
+                      ref.read(repositoriesProvider.notifier).sortByStars(),
                 ),
                 PopupMenuOption(
                   label: 'Names',
-                  onTap: (_) => ref
-                      .read(sortedRepositoriesProvider.notifier)
-                      .sortByName(),
+                  onTap: (_) =>
+                      ref.read(repositoriesProvider.notifier).sortByName(),
                 ),
                 // Add other sorting options here
               ],

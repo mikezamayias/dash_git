@@ -1,69 +1,55 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/repository_model.dart';
 import 'query_provider.dart';
 
-final sortedRepositoriesProvider =
-    StateNotifierProvider<SortedRepositoriesNotifier, List<RepositoryModel>>(
-        (ref) {
-  final repositories = ref.watch(repositoriesProvider).value ?? [];
-  return SortedRepositoriesNotifier(repositories);
+final repositoriesProvider = StateNotifierProvider<RepositoriesNotifier,
+    AsyncValue<List<RepositoryModel>>>((ref) {
+  return RepositoriesNotifier(ref);
 });
 
-class SortedRepositoriesNotifier extends StateNotifier<List<RepositoryModel>> {
-  SortedRepositoriesNotifier(super.initialRepositories);
+class RepositoriesNotifier
+    extends StateNotifier<AsyncValue<List<RepositoryModel>>> {
+  final Ref ref;
 
-  void sortByStars() {
-    state = [...state]..sort(
-        (a, b) => (b.stargazersCount ?? 0).compareTo(a.stargazersCount ?? 0));
+  RepositoriesNotifier(this.ref) : super(const AsyncValue.loading()) {
+    _fetchRepositories();
   }
 
-  void sortByName() {
-    state = [...state]..sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
-  }
-}
-
-final repositoriesProvider = FutureProvider<List<RepositoryModel>>(
-  (ref) async {
+  Future<void> _fetchRepositories() async {
+    final usernameQuery = ref.watch(usernameQueryProvider);
     try {
-      final String usernameQuery =
-          ref.watch(usernameQueryProvider) ?? 'mikezamayias';
-      final path = '/users/$usernameQuery/repos';
       final response = await http.get(
-        Uri.https('api.github.com', path),
+        Uri.https('api.github.com', '/users/$usernameQuery/repos'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
         },
       );
-      log('${response.statusCode}', name: 'repositoriesProvider:statusCode');
       if (response.statusCode == 200) {
-        log('${jsonDecode(response.body)}', name: 'repositoriesProvider:body');
-        return (jsonDecode(response.body) as List)
+        final data = (jsonDecode(response.body) as List)
             .map((json) => RepositoryModel.fromJson(json))
             .toList();
-      } else if (response.statusCode == 304) {
-        throw Exception('Data not modified since last request.');
-      } else if (response.statusCode == 401) {
-        throw Exception('Authentication required. Please login.');
-      } else if (response.statusCode == 403) {
-        throw Exception(
-            'Access forbidden. You might not have the necessary permissions.');
+        state = AsyncValue.data(data);
       } else if (response.statusCode == 404) {
         throw Exception('User not found.');
-      } else {
-        throw HttpException(
-          'Failed to fetch user profile',
-          uri: Uri.https('api.github.com', path),
-        );
       }
     } on SocketException {
-      throw Exception('No Internet connection.');
+      state = AsyncValue.error('No Internet connection.', StackTrace.current);
+    } catch (e) {
+      state = AsyncValue.error(e.toString(), StackTrace.current);
     }
-  },
-);
+  }
+
+  void sortByStars() {
+    state = state.whenData((repositories) => [...repositories]..sort(
+        (a, b) => (b.stargazersCount ?? 0).compareTo(a.stargazersCount ?? 0)));
+  }
+
+  void sortByName() {
+    state = state.whenData((repositories) => [...repositories]
+      ..sort((a, b) => (a.name ?? '').compareTo(b.name ?? '')));
+  }
+}
