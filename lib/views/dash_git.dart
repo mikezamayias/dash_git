@@ -8,6 +8,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 import '../controllers/route_controller.dart';
 import '../models/route_model.dart';
 import '../providers/query_provider.dart';
+import '../widgets/select_user.dart';
 import '../wrappers/keep_alive_wrapper.dart';
 
 class DashGit extends ConsumerWidget {
@@ -16,38 +17,28 @@ class DashGit extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditingController = TextEditingController();
-    List<Widget> views = RouteController()
-        .routes
-        .map(
-          (RouteModel routeModel) => KeepAliveWrapper(
-            child: Container(
-              color: platformThemeData(
-                context,
-                cupertino: (data) => CupertinoColors.systemGroupedBackground,
-                material: (data) => data.colorScheme.surface,
-              ),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                reverseDuration: const Duration(milliseconds: 300),
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                child: ref.watch(usernameQueryProvider) == null
-                    ? Center(
-                        child: PlatformText(
-                          'Search for a user to view their ${routeModel.label.toLowerCase()}.',
-                          style: platformThemeData(
-                            context,
-                            material: (data) => data.textTheme.bodyMedium,
-                            cupertino: (data) => data.textTheme.textStyle,
-                          ),
-                        ),
-                      )
-                    : routeModel.view,
-              ),
+    List<Widget> views = RouteController().routes.map(
+      (RouteModel routeModel) {
+        return KeepAliveWrapper(
+          child: Container(
+            color: platformThemeData(
+              context,
+              cupertino: (data) => CupertinoColors.systemGroupedBackground,
+              material: (data) => data.colorScheme.surface,
+            ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              reverseDuration: const Duration(milliseconds: 300),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              child: ref.watch(usernameQueryProvider) == null
+                  ? SelectUser(label: routeModel.label.toLowerCase())
+                  : routeModel.view,
             ),
           ),
-        )
-        .toList();
+        );
+      },
+    ).toList();
 
     return PlatformScaffold(
       backgroundColor: platformThemeData(
@@ -120,19 +111,13 @@ class DashGit extends ConsumerWidget {
         ),
       ),
       bottomNavBar: PlatformNavBar(
-        material3: (_, __) => MaterialNavigationBarData(
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        ),
-        material: (_, __) => MaterialNavBarData(
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-        ),
         currentIndex: ref.watch(RouteController.currentRouteIndexProvider),
         items: <BottomNavigationBarItem>[
           ...RouteController().routes.map<BottomNavigationBarItem>(
             (RouteModel routeModel) {
               return BottomNavigationBarItem(
                 icon: routeModel.icon,
+                label: routeModel.label,
               );
             },
           ),
