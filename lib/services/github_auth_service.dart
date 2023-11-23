@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,7 +9,15 @@ import '../controllers/token_controller.dart';
 import '../env/env.dart';
 import '../models/token_model.dart';
 
-class GitHubAuth {
+final gitHubAuthProvider = Provider<GitHubAuth>((ref) {
+  return GitHubAuth(ref);
+});
+
+class GitHubAuth extends StateNotifier<void> {
+  GitHubAuth(this._ref) : super(null);
+
+  final Ref _ref;
+
   static String clientId = Env.githubClientId;
   static String clientSecret = Env.githubClientSecret;
   static String redirectUri = 'dashgit://oauth2redirect';
@@ -92,23 +101,26 @@ class GitHubAuth {
     try {
       final code = await _getAuthorizationCode(scopes);
       final tokenModel = await _exchangeCodeForAccessToken(code);
-      TokenController().storeTokens(tokenModel);
+      _ref.read(tokenControllerProvider.notifier).storeTokens(tokenModel);
     } on Exception {
       rethrow;
     }
   }
 
   Future<void> refresh() async {
-    TokenController tokenManager = TokenController();
-    TokenModel tokens = await tokenManager.getTokens();
-    String refreshToken = tokens.accessToken;
-    List<String> scopes = tokens.scope.split(',');
+    final tokenController = _ref.read(tokenControllerProvider.notifier);
+    final TokenModel? tokens = _ref.read(tokenControllerProvider);
 
-    try {
-      final tokenModel = await _refreshAccessToken(refreshToken, scopes);
-      await tokenManager.storeTokens(tokenModel);
-    } on Exception {
-      rethrow;
+    if (tokens != null) {
+      String refreshToken = tokens.accessToken;
+      List<String> scopes = tokens.scope.split(',');
+
+      try {
+        final tokenModel = await _refreshAccessToken(refreshToken, scopes);
+        tokenController.storeTokens(tokenModel);
+      } on Exception {
+        rethrow;
+      }
     }
   }
 
@@ -127,12 +139,14 @@ class GitHubAuth {
   }
 
   Future<void> logout() async {
-    TokenController tokenManager = TokenController();
-    TokenModel tokens = await tokenManager.getTokens();
-    String accessToken = tokens.accessToken;
+    final tokenController = _ref.read(tokenControllerProvider.notifier);
+    final TokenModel? tokens = _ref.read(tokenControllerProvider);
 
-    await revokeAccessToken(accessToken);
-    await tokenManager.clearTokens();
+    if (tokens != null) {
+      String accessToken = tokens.accessToken;
+      await revokeAccessToken(accessToken);
+      tokenController.clearTokens();
+    }
   }
 
   String _getAuthUrlWithScopes(List<String> scopes) {

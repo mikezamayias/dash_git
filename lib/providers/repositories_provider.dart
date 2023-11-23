@@ -32,14 +32,15 @@ final repositoriesProvider =
     FutureProvider.family<List<RepositoryModel>, String?>(
   (ref, username) async {
     try {
-      final tokenModel = TokenController().tokenModel!;
+      final tokenModel = ref.watch(tokenControllerProvider);
       final path = username == null ? '/user/repos' : '/users/$username/repos';
       final response = await http.get(
         Uri.https('api.github.com', path),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
-          'Authorization': 'Bearer ${tokenModel.accessToken}',
+          if (tokenModel != null)
+            'Authorization': 'Bearer ${tokenModel.accessToken}',
         },
       );
       log('${response.statusCode}', name: 'repositoriesProvider:statusCode');

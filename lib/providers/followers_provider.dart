@@ -11,7 +11,7 @@ import '../models/follower_model.dart';
 final followersProvider = FutureProvider.family<List<FollowerModel>, String?>(
   (ref, username) async {
     try {
-      final tokenModel = TokenController().tokenModel!;
+      final tokenModel = ref.watch(tokenControllerProvider);
       final path =
           username == null ? '/user/followers' : '/users/$username/followers';
       final response = await http.get(
@@ -19,7 +19,8 @@ final followersProvider = FutureProvider.family<List<FollowerModel>, String?>(
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
-          'Authorization': 'Bearer ${tokenModel.accessToken}',
+          if (tokenModel != null)
+            'Authorization': 'Bearer ${tokenModel.accessToken}',
         },
       );
       log('${response.statusCode}', name: 'followersProvider:statusCode');

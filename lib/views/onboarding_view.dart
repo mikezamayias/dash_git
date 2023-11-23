@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 
 import '../controllers/token_controller.dart';
@@ -9,11 +10,11 @@ import '../services/github_auth_service.dart';
 import '../widgets/blueprint_view.dart';
 import 'dash_git.dart';
 
-class OnboardingView extends StatelessWidget {
+class OnboardingView extends ConsumerWidget {
   const OnboardingView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PlatformScaffold(
       body: BlueprintView(
         child: Column(
@@ -62,8 +63,13 @@ class OnboardingView extends StatelessWidget {
             const SizedBox(height: 16),
             PlatformTextButton(
               onPressed: () async {
-                GitHubAuth().authenticate().whenComplete(
-                      () => TokenController().getTokens().then(
+                ref.read(gitHubAuthProvider).authenticate().whenComplete(
+                  () {
+                    ref
+                        .read(tokenControllerProvider.notifier)
+                        .fetchTokens()
+                        .whenComplete(
+                      () {
                         (TokenModel value) {
                           if (value.accessToken.isNotEmpty) {
                             context.navigator.pushReplacement(
@@ -73,9 +79,11 @@ class OnboardingView extends StatelessWidget {
                               ),
                             );
                           }
-                        },
-                      ),
+                        };
+                      },
                     );
+                  },
+                );
               },
               child: Text(
                 'Get Started',
