@@ -36,7 +36,7 @@ class RouteController {
   static final followersRoute = RouteModel(
     label: 'Followers',
     icon: Builder(
-      builder: (context) => Icon(context.platformIcons.personSolid),
+      builder: (context) => Icon(context.platformIcons.group),
     ),
     view: const FollowersView(),
   );
