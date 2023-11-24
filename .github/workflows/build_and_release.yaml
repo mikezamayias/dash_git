@@ -30,7 +30,7 @@ jobs:
           printf "build_attempt=%s\n" $build_attempt >> $GITHUB_OUTPUT
           build_version=1.0.0
           printf "build_version=%s\n" $build_version >> $GITHUB_OUTPUT
-          printf "build_name=%s-%s.%s\n" dashgit $build_version $build_number >> $GITHUB_OUTPUT
+          printf "build_name=%s-%s.%s\n" dash_git $build_version $build_number >> $GITHUB_OUTPUT
 
   build:
     name: Build and Release
@@ -79,7 +79,7 @@ jobs:
       - name: Rename IPA
         run: |
           cd "build/ios/ipa"
-          mv dashgit.ipa ${{env.BUILD_NAME}}.ipa
+          mv dash_git.ipa ${{env.BUILD_NAME}}.ipa
       - name: GitHub Release
         uses: ncipollo/release-action@v1
         with:
