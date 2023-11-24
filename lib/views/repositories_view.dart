@@ -6,18 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/repository_model.dart';
 import '../providers/repositories_provider.dart';
 import '../widgets/list_with_header.dart';
+import '../wrappers/future_provider_wrapper.dart';
 
 class RepositoriesView extends ConsumerWidget {
   const RepositoriesView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repositoriesAsyncValue = ref.watch(repositoriesProvider);
-
-    return repositoriesAsyncValue.when(
-      loading: () => Center(child: PlatformCircularProgressIndicator()),
-      error: (error, _) => Center(child: Text('$error')),
-      data: (List<RepositoryModel> repositoryModels) {
+    return FutureProviderWrapper(
+      provider: repositoriesProvider,
+      builder: (List<RepositoryModel> repositoryModels) {
         // Check if repository list is empty
         if (repositoryModels.isEmpty) {
           return const Center(child: Text('No repositories found.'));
@@ -60,9 +58,15 @@ class RepositoriesView extends ConsumerWidget {
             child: PlatformPopupMenu(
               options: <PopupMenuOption>[
                 PopupMenuOption(
-                  label: 'Stars',
+                  label: 'Asc. Star Count',
                   onTap: (_) {
-                    ref.read(repositoriesProvider.notifier).sortByStars();
+                    // ref.read(repositoriesProvider.notifier).sortByStars();
+                  },
+                ),
+                PopupMenuOption(
+                  label: 'Desc. Star Count',
+                  onTap: (_) {
+                    // ref.read(repositoriesProvider.notifier).sortByStars();
                   },
                 ),
               ],

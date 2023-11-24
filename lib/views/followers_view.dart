@@ -6,32 +6,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/follower_model.dart';
 import '../providers/followers_provider.dart';
 import '../widgets/list_with_header.dart';
+import '../wrappers/future_provider_wrapper.dart';
 
 class FollowersView extends ConsumerWidget {
   const FollowersView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followersAsyncValue = ref.watch(followersProvider);
-
     return Container(
       color: platformThemeData(
         context,
         cupertino: (data) => CupertinoColors.systemGroupedBackground,
         material: (data) => data.colorScheme.surface,
       ),
-      child: followersAsyncValue.when(
-        loading: () => Center(child: PlatformCircularProgressIndicator()),
-        error: (error, _) => Center(child: Text('$error')),
-        data: (List<FollowerModel> followerModels) {
+      child: FutureProviderWrapper<List<FollowerModel>>(
+        provider: followersProvider,
+        builder: (List<FollowerModel> followerModels) {
           if (followerModels.isEmpty) {
             return const Center(child: Text('No followers found.'));
           }
-
           final header = PlatformListTile(
             title: Text('Number of followers: ${followerModels.length}'),
           );
-
           final widgets = <Widget>[
             for (final followerModel in followerModels)
               PlatformListTile(
@@ -50,7 +46,6 @@ class FollowersView extends ConsumerWidget {
                 ),
               ),
           ];
-
           return ListWithHeader(header: header, widgets: widgets);
         },
       ),
