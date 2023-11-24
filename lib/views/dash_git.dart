@@ -93,34 +93,49 @@ class DashGit extends ConsumerWidget {
   ) {
     return showPlatformDialog(
       context: context,
-      builder: (_) => PlatformAlertDialog(
-        title: const Text('Search for a user'),
-        content: PlatformWidget(
-          cupertino: (context, _) => Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: CupertinoSearchTextField(
-              controller: textEditingController,
-              placeholder: 'username',
+      builder: (_) => Consumer(
+        builder: (context, ref, child) {
+          return PlatformAlertDialog(
+            title: const Text('Search for a user'),
+            content: PlatformWidget(
+              cupertino: (context, _) => Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: CupertinoSearchTextField(
+                  controller: textEditingController,
+                  placeholder: 'username',
+                ),
+              ),
+              material: (context, _) => TextField(
+                controller: textEditingController,
+                decoration: const InputDecoration(
+                  hintText: 'username',
+                  prefixIcon: Icon(Icons.search),
+                ),
+              ),
             ),
-          ),
-          material: (context, _) => TextField(
-            controller: textEditingController,
-            decoration: const InputDecoration(
-              hintText: 'username',
-              prefixIcon: Icon(Icons.search),
-            ),
-          ),
-        ),
-        actions: [
-          PlatformDialogAction(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context),
-          ),
-          ValueListenableBuilder(
-            valueListenable: textEditingController,
-            builder: (context, value, child) {
-              return Consumer(
-                builder: (context, ref, child) {
+            actions: [
+              PlatformDialogAction(
+                child: const Text('Cancel'),
+                onPressed: () => Navigator.pop(context),
+                cupertino: (_, __) => CupertinoDialogActionData(
+                  isDestructiveAction: true,
+                ),
+                material: (_, __) => MaterialDialogActionData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: context.theme.colorScheme.error,
+                  ),
+                ),
+              ),
+              PlatformDialogAction(
+                child: const Text('Reset'),
+                onPressed: () {
+                  ref.read(usernameQueryProvider.notifier).state = null;
+                  Navigator.pop(context);
+                },
+              ),
+              ValueListenableBuilder(
+                valueListenable: textEditingController,
+                builder: (context, value, child) {
                   return PlatformDialogAction(
                     onPressed: textEditingController.text.isEmpty
                         ? null
@@ -132,10 +147,10 @@ class DashGit extends ConsumerWidget {
                     child: const Text('Search'),
                   );
                 },
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
