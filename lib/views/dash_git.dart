@@ -9,7 +9,6 @@ import '../controllers/route_controller.dart';
 import '../models/route_model.dart';
 import '../providers/query_provider.dart';
 import '../widgets/select_user.dart';
-import '../wrappers/keep_alive_wrapper.dart';
 
 class DashGit extends ConsumerWidget {
   const DashGit({super.key});
@@ -19,23 +18,21 @@ class DashGit extends ConsumerWidget {
     final textEditingController = TextEditingController();
     List<Widget> views = RouteController().routes.map(
       (RouteModel routeModel) {
-        return KeepAliveWrapper(
-          child: Container(
-            color: platformThemeData(
-              context,
-              cupertino: (data) => CupertinoColors.systemGroupedBackground,
-              material: (data) => data.colorScheme.surface,
-            ),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              reverseDuration: const Duration(milliseconds: 300),
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              child: ref.watch(usernameQueryProvider) != null &&
-                      ref.watch(usernameQueryProvider)!.isNotEmpty
-                  ? routeModel.view
-                  : SelectUser(label: routeModel.label.toLowerCase()),
-            ),
+        return Container(
+          color: platformThemeData(
+            context,
+            cupertino: (data) => CupertinoColors.systemGroupedBackground,
+            material: (data) => data.colorScheme.surface,
+          ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            reverseDuration: const Duration(milliseconds: 300),
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            child: ref.watch(usernameQueryProvider) != null &&
+                    ref.watch(usernameQueryProvider)!.isNotEmpty
+                ? routeModel.view
+                : SelectUser(label: routeModel.label.toLowerCase()),
           ),
         );
       },

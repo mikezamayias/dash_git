@@ -6,12 +6,12 @@ class ListWithTitleAndSubtitle extends StatelessWidget {
   const ListWithTitleAndSubtitle({
     super.key,
     this.title,
-    required this.header,
+    this.header,
     required this.widgets,
   });
 
   final Widget? title;
-  final Widget header;
+  final Widget? header;
   final List<Widget> widgets;
 
   @override
@@ -38,7 +38,7 @@ class ListWithTitleAndSubtitle extends StatelessWidget {
         primary: true,
         child: Column(
           children: [
-            header,
+            if (header != null) header!,
             if (title != null) title!,
             ListView.separated(
               shrinkWrap: true,
