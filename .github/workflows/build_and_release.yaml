@@ -10,7 +10,6 @@ jobs:
   get_build_info:
     name: Get Build Info
     runs-on: self-hosted
-    needs: cancel_previous_runs
     outputs:
       BUILD_DATE: ${{steps.get_build_metadata.outputs.current_date}}
       BUILD_NAME: ${{steps.get_build_metadata.outputs.build_name}}
