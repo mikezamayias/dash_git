@@ -1,60 +1,44 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../models/repository_model.dart';
 import 'query_provider.dart';
 
-final StateProvider<bool> ascendingOrderProvider =
-    StateProvider<bool>((ref) => true);
-
-final repositoriesProvider = StateNotifierProvider<RepositoriesNotifier,
-    AsyncValue<List<RepositoryModel>>>((ref) {
-  return RepositoriesNotifier(ref);
-});
-
-class RepositoriesNotifier
-    extends StateNotifier<AsyncValue<List<RepositoryModel>>> {
-  final Ref ref;
-
-  RepositoriesNotifier(this.ref) : super(const AsyncValue.loading()) {
-    _fetchRepositories();
-  }
-
-  Future<void> _fetchRepositories() async {
-    final usernameQuery = ref.watch(usernameQueryProvider);
+final repositoriesProvider = FutureProvider<List<RepositoryModel>>(
+  (ref) async {
     try {
+      final String usernameQuery = ref.watch(usernameQueryProvider)!;
+      final path = '/users/$usernameQuery/repos';
       final response = await http.get(
-        Uri.https('api.github.com', '/users/$usernameQuery/repos'),
+        Uri.https('api.github.com', path),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
         },
       );
+      log('${response.statusCode}', name: 'repositoriesProvider:statusCode');
       if (response.statusCode == 200) {
-        final data = (jsonDecode(response.body) as List)
+        log('${jsonDecode(response.body)}', name: 'repositoriesProvider:body');
+        return (jsonDecode(response.body) as List)
             .map((json) => RepositoryModel.fromJson(json))
             .toList();
-        state = AsyncValue.data(data);
+      } else if (response.statusCode == 304) {
+        throw Exception('Data not modified since last request.');
+      } else if (response.statusCode == 401) {
+        throw Exception('Authentication required. Please login.');
+      } else if (response.statusCode == 403) {
+        throw Exception(
+            'Access forbidden. You might not have the necessary permissions.');
       } else if (response.statusCode == 404) {
         throw Exception('User not found.');
+      } else {
+        throw HttpException('Failed to fetch user profile',
+            uri: Uri.https('api.github.com', path));
       }
     } on SocketException {
-      state = AsyncValue.error('No Internet connection.', StackTrace.current);
-    } catch (e) {
-      state = AsyncValue.error(e.toString(), StackTrace.current);
+      throw Exception('No Internet connection.');
     }
-  }
-
-  void sortByStars() {
-    state = state.whenData(
-      (repositories) => [...repositories]..sort(
-          (a, b) => ref.read(ascendingOrderProvider)
-              ? (a.stargazersCount ?? 0).compareTo(b.stargazersCount ?? 0)
-              : (b.stargazersCount ?? 0).compareTo(a.stargazersCount ?? 0),
-        ),
-    );
-    ref.read(ascendingOrderProvider.notifier).state =
-        !ref.read(ascendingOrderProvider.notifier).state;
-  }
-}
+  },
+);
