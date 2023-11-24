@@ -14,7 +14,7 @@ class UserProfileView extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: FutureProviderWrapper(
-        provider: userProvider,
+        provider: userFutureProvider,
         builder: (UserModel userModel) {
           return Column(
             children: [

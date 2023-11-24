@@ -53,7 +53,7 @@ class SearchUserView extends ConsumerWidget {
                 },
               ),
               if (searchQuery != null && searchQuery.isNotEmpty)
-                ref.watch(userProvider).when(
+                ref.watch(userFutureProvider).when(
                       data: (UserModel userModel) {
                         return Padding(
                           padding: const EdgeInsets.all(16),
