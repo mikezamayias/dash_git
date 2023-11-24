@@ -1,0 +1,101 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - production
+  workflow_dispatch:
+
+jobs:
+  get_build_info:
+    name: Get Build Info
+    runs-on: self-hosted
+    needs: cancel_previous_runs
+    outputs:
+      BUILD_DATE: ${{steps.get_build_metadata.outputs.current_date}}
+      BUILD_NAME: ${{steps.get_build_metadata.outputs.build_name}}
+      BUILD_VERSION: ${{steps.get_build_metadata.outputs.build_version}}
+      BUILD_NUMBER: ${{steps.get_build_metadata.outputs.build_number}}
+      BUILD_ATTEMPT: ${{steps.get_build_metadata.outputs.build_attempt}}
+      MAJOR_VERSION: ${{steps.get_build_metadata.outputs.major_version}}
+    steps:
+      - id: get_build_metadata
+        run: |
+          major_version=1
+          echo "major_version=$major_version" >> $GITHUB_OUTPUT
+          current_date=$(date +%Y%m%d)
+          echo "current_date=$current_date" >> $GITHUB_OUTPUT
+          build_number=${{github.run_number}}
+          printf "build_number=%s\n" $build_number >> $GITHUB_OUTPUT
+          build_attempt=${{github.run_attempt}}
+          printf "build_attempt=%s\n" $build_attempt >> $GITHUB_OUTPUT
+          build_version=1.0.0
+          printf "build_version=%s\n" $build_version >> $GITHUB_OUTPUT
+          printf "build_name=%s-%s.%s\n" dashgit $build_version $build_number >> $GITHUB_OUTPUT
+
+  build:
+    name: Build and Release
+    runs-on: self-hosted
+    needs: get_build_info
+    env:
+      BUILD_DATE: ${{needs.get_build_info.outputs.BUILD_DATE}}
+      BUILD_NAME: ${{needs.get_build_info.outputs.BUILD_NAME}}
+      BUILD_VERSION: ${{needs.get_build_info.outputs.BUILD_VERSION}}
+      BUILD_NUMBER: ${{needs.get_build_info.outputs.BUILD_NUMBER}}
+      BUILD_ATTEMPT: ${{needs.get_build_info.outputs.BUILD_ATTEMPT}}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17"
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.8.0
+        id: flutter-action
+        with:
+          cache: true
+          flutter-version: 3.13.9
+          architecture: arm64
+      - name: Update pubspec version
+        run: |
+          version=$(grep version pubspec.yaml | awk '{print $2}')
+          new_version="${{env.BUILD_VERSION}}"
+          if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i '' "s/^version:.*/version: $new_version+${{env.BUILD_NUMBER}}/" pubspec.yaml
+          else
+            sed -i "s/^version:.*/version: $new_version+${{env.BUILD_NUMBER}}/" pubspec.yaml
+          fi
+      - name: Build generated files
+        run: dart run build_runner build --delete-conflicting-outputs
+      - name: Build APK
+        run: flutter build apk --release
+      - name: Rename APK
+        run: |
+          cd "build/app/outputs/apk/release"
+          mv app-release.apk ${{env.BUILD_NAME}}.apk
+      - name: Build IPA
+        run: flutter build ipa --release
+      - name: Rename IPA
+        run: |
+          cd "build/ios/ipa"
+          mv dashgit.ipa ${{env.BUILD_NAME}}.ipa
+      - name: GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/release/${{env.BUILD_NAME}}.aab,build/ios/ipa/${{env.BUILD_NAME}}.ipa"
+          name: ${{env.BUILD_NAME}}
+          tag: ${{env.BUILD_NAME}}
+          body: ${{github.event.head_commit.message}}
+          token: ${{secrets.github_token}}
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.BUILD_NAME}}.aab
+          path: build/app/outputs/bundle/release/${{env.BUILD_NAME}}.aab
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.BUILD_NAME}}.ipa
+          path: build/ios/ipa/${{env.BUILD_NAME}}.ipa
