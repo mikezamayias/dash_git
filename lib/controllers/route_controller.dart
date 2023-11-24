@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/route_model.dart';
 import '../views/followers_view.dart';
 import '../views/repositories_view.dart';
-import '../views/search_user_view.dart';
 import '../views/user_profile_view.dart';
 
 class RouteController {
@@ -40,18 +39,10 @@ class RouteController {
     ),
     view: const FollowersView(),
   );
-  static final searchRoute = RouteModel(
-    label: 'Search User',
-    icon: Builder(
-      builder: (context) => Icon(context.platformIcons.search),
-    ),
-    view: const SearchUserView(),
-  );
   final routes = [
     userProfileRoute,
     repositoriesRoute,
     followersRoute,
-    // searchRoute,
   ];
   static StateProvider<int> currentRouteIndexProvider =
       StateProvider((ref) => 0);
