@@ -83,7 +83,7 @@ jobs:
       - name: GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/bundle/release/${{env.BUILD_NAME}}.apk,build/ios/ipa/${{env.BUILD_NAME}}.ipa"
+          artifacts: "build/app/outputs/flutter-apk/${{env.BUILD_NAME}}.apk,build/ios/ipa/${{env.BUILD_NAME}}.ipa"
           name: ${{env.BUILD_NAME}}
           tag: ${{env.BUILD_NAME}}
           body: ${{github.event.head_commit.message}}
@@ -92,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.BUILD_NAME}}.apk
-          path: build/app/outputs/bundle/release/${{env.BUILD_NAME}}.apk
+          path: build/app/outputs/flutter-apk/${{env.BUILD_NAME}}.apk
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v3
         with:
